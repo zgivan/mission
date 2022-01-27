@@ -30,29 +30,10 @@
 		
 		<!-- 自定义列表组件 -->
 		<view class="mt-2 bg-white">
-			<block v-for="(item,index) in 6" :key="index">
-				<free-list></free-list>
+			<block v-for="(item,index) in mList" :key="index">
+				<free-list :item="item" @detail="toDetail"></free-list>
 			</block>
 		</view>
-		
-		<!-- 普通弹层 -->
-		<!-- <view>
-			<uni-popup ref="popup" background-color="#fff" @change="change">
-				<view class="popup-content" :class="{ 'popup-height': type === 'left' || type === 'right' }">
-					<view style="max-height: 400rpx;overflow-y: auto;" class="w-100">
-						<uni-row>
-							<uni-col :span="12" v-for="(item,index) in list" :key="index">
-								<view class="text-center pt-2">{{item.text}}</view>
-							</uni-col>
-						</uni-row>
-					</view>
-					<view class="flex justify-around py-2">
-						<view class="font d-inline-block bg-white border rounded px-2 py-1">重置</view>
-						<view class="font d-inline-block main-bg-color border rounded px-2 py-1 text-white">确定</view>
-					</view>
-				</view>
-			</uni-popup>
-		</view> -->
 		
 		<!-- 选择疾病类型 -->
 		<uni-popup ref="popup" background-color="#fff">
@@ -75,18 +56,6 @@
 				<view class="scroll-row-item mr-2 font" :id="'tab'+i" :class="currTab===i?'border-bottom main-border-color main-text-color':''" @click="changeTab(i)">选项{{i+1}}</view>
 			</block>
 		</scroll-view> -->
-		
-		<!-- grid宫格排版 -->
-	<!-- 	<uni-section title="矩形宫格（3列）" type="line" :padding="false">
-			<uni-grid :column="5" :show-border="false" :square="false" :highlight="false" @change="change">
-				<uni-grid-item v-for="(item, index) in gridList" :index="index" :key="index">
-					<view class="grid-item-box">
-						<image :src="item.url" class="grid-image" mode="aspectFill" />
-						<text class="grid-text">{{ item.text }}</text>
-					</view>
-				</uni-grid-item>
-			</uni-grid>
-		</uni-section> -->
 		
 		<!-- 列表形式组件 -->
 		<!-- <uni-section title="显示图标或图片" type="line" :padding="false">
@@ -113,7 +82,7 @@
 				symptom: '疾病类型',				//选中的疾病类型
 				symList: [],					//疾病类型列表
 				symIndex: 0,					//当前选中疾病类型项
-				symId: 0,							//当前选中疾病类型ID
+				symId: '',							//当前选中疾病类型ID
 				mList: [],						//任务列表
 				
 				currTab: 0,
@@ -122,55 +91,6 @@
 					size: '22',
 					type: 'gear-filled'
 				},
-				gridList: [{
-						url: '/static/c1.png',
-						text: 'Grid 1',
-						badge: '0',
-						type: "primary"
-					},
-					{
-						url: '/static/c2.png',
-						text: 'Grid 2',
-						badge: '1',
-						type: "success"
-					},
-					{
-						url: '/static/c3.png',
-						text: 'Grid 3',
-						badge: '99',
-						type: "warning"
-					},
-					{
-						url: '/static/c4.png',
-						text: 'Grid 4',
-						badge: '2',
-						type: "error"
-					},
-					{
-						url: '/static/c5.png',
-						text: 'Grid 5'
-					},
-					{
-						url: '/static/c6.png',
-						text: 'Grid 6'
-					},
-					{
-						url: '/static/c7.png',
-						text: 'Grid 7'
-					},
-					{
-						url: '/static/c8.png',
-						text: 'Grid 8'
-					},
-					{
-						url: '/static/c9.png',
-						text: 'Grid 9'
-					},
-					{
-						url: '/static/c9.png',
-						text: 'Grid 10'
-					}
-				],
 				info: [{
 						url: 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-dc-site/094a9dc0-50c0-11eb-b680-7980c8a877b8.jpg',
 						content: '内容 A'
@@ -200,6 +120,7 @@
 		},
 		onLoad() {
 			this.getSymptom()
+			this.getMissions()
 		},
 		computed:{
 			skipId(){
@@ -237,7 +158,7 @@
 					console.log(res)
 					if(res.code === 1){
 						var obj = {}
-						obj.id = 0
+						obj.id = ''
 						obj.name = '疾病类型'
 						var arr = []
 						arr.push(obj)
@@ -249,6 +170,27 @@
 						})
 					}
 				})
+			},
+			getMissions(){
+				$H.post('/task/list',{
+					city: '',
+					symptom: this.symId
+				}).then(res => {
+					console.log(res)
+					if(res.code === 1){
+						this.mList = res.data.list
+					}else{
+						uni.showToast({
+							msg: res.msg,
+							icon: 'none'
+						})
+					}
+				})
+			},
+			toDetail(id){
+				uni.navigateTo({
+					url: '/pages/mission/mission-detail/mission-detail?id='+id
+				});
 			}
 		}
 	}

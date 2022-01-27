@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "患者管理",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "free-list": "/components/use-components/free-list",
+    "free-tab": "/components/use-components/free-tab",
+    "free-patient-item": "/components/use-components/free-patient-item"
+  }
+}

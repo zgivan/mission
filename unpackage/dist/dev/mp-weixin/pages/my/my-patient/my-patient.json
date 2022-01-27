@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "test",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "uni-popup": "/uni_modules/uni-popup/components/uni-popup/uni-popup",
+    "free-search-select": "/components/use-components/free-search-select",
+    "free-single-select": "/components/use-components/free-single-select",
+    "free-patient-item": "/components/use-components/free-patient-item",
+    "free-popup-tab": "/components/use-components/free-popup-tab"
+  }
+}

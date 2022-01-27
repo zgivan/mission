@@ -123,7 +123,6 @@ const types = {
 }
 
 class RuleValidator {
-
 	constructor(message) {
 		this._message = message
 	}

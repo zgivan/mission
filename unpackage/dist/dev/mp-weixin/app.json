@@ -62,5 +62,6 @@
   },
   "usingComponents": {
     "common-fixed-line": "/components/use-components/common-fixed-line"
-  }
+  },
+  "sitemapLocation": "sitemap.json"
 }

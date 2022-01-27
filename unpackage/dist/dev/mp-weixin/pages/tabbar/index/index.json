@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "广州百科迈",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "uni-swiper-dot": "/uni_modules/uni-swiper-dot/components/uni-swiper-dot/uni-swiper-dot",
+    "uni-search-bar": "/uni_modules/uni-search-bar/components/uni-search-bar/uni-search-bar",
+    "uni-popup": "/uni_modules/uni-popup/components/uni-popup/uni-popup",
+    "free-list": "/components/use-components/free-list",
+    "free-single-select": "/components/use-components/free-single-select"
+  }
+}
