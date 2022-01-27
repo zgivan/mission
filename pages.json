@@ -109,9 +109,9 @@
         }
     ],
 	"globalStyle": {
-		"navigationBarTextStyle": "white",
+		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "广州百科迈",
-		"navigationBarBackgroundColor": "#5ed879",
+		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#ededed"
 	},
 	"tabBar": {

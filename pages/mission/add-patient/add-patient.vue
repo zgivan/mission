@@ -54,13 +54,13 @@
 			return {
 				isBase: false,
 				dataTree: [{
-					text: "北京",
+					text: "广东",
 					value: "1-0",
 					children: [{
-						text: "北京",
+						text: "广州",
 						value: "1-1",
 						children: [{
-							text: "北京",
+							text: "白云",
 							value: "1-1-1"
 						}]
 					},

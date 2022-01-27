@@ -16,10 +16,10 @@
 				<uni-search-bar @confirm="search" :focus="searchFocus" placeholder="请输入招募项目/研究中心/登记编号/药物名" v-model="searchValue" @blur="blur" @focus="focus" @input="input"  bgColor="#EEEEEE"
 					@cancel="cancel" @clear="clear">
 				</uni-search-bar>
-				<view class="flex px-3 justify-around">
-					<view class="font-sm" @click="toggle()">疾病类型</view>
-					<view class="font-sm">所在城市</view>
-					<view class="font-sm">佣金</view>
+				<view class="flex px-3">
+					<view class="font-sm flex-1 flex align-center justify-center" @click="toggle()">{{symptom}}</view>
+					<view class="font-sm flex-1 flex align-center justify-center">所在城市</view>
+					<view class="font-sm flex-1 flex align-center justify-center">佣金</view>
 				</view>
 			<!-- </uni-card> -->
 		</view>
@@ -36,7 +36,7 @@
 		</view>
 		
 		<!-- 普通弹层 -->
-		<view>
+		<!-- <view>
 			<uni-popup ref="popup" background-color="#fff" @change="change">
 				<view class="popup-content" :class="{ 'popup-height': type === 'left' || type === 'right' }">
 					<view style="max-height: 400rpx;overflow-y: auto;" class="w-100">
@@ -52,7 +52,15 @@
 					</view>
 				</view>
 			</uni-popup>
-		</view>
+		</view> -->
+		
+		<!-- 选择疾病类型 -->
+		<uni-popup ref="popup" background-color="#fff">
+			<view class="popup-content" :class="{ 'popup-height': type === 'left' || type === 'right' }">
+				<free-single-select :list="symList" :val="symIndex" @change="bindChange" @comf="comform"></free-single-select>
+			</view>
+		</uni-popup>
+		
 		<!-- 悬浮按钮 -->
 		<navigator url="/pages/mission/add-patient/add-patient" class="position-fixed rounded-circle main-bg-color text-white flex align-center justify-center font-lg" style="width:60rpx;height:60rpx;bottom: 30rpx;right: 30rpx;">＋</navigator>
 		
@@ -91,12 +99,18 @@
 
 <script>
 	import freeList from '@/components/use-components/free-list.vue'
+	import freeSingleSelect from '@/components/use-components/free-single-select.vue'
+	
+	import $H from '@/common/lib/request.js'
+	
 	export default {
 		components: {
-			freeList
+			freeList,
+			freeSingleSelect
 		},
 		data() {
 			return {
+				symptom: '疾病类型',
 				currTab: 0,
 				extraIcon: {
 					color: '#4cd964',
@@ -165,50 +179,9 @@
 						content: '内容 C'
 					}
 				],
-				list: [
-					{
-						text: 'Grid 1'
-					},
-					{
-						text: 'Grid 2'
-					},
-					{
-						text: 'Grid 3'
-					},
-					{
-						text: 'Grid 4'
-					},
-					{
-						text: 'Grid 5'
-					},
-					{
-						text: 'Grid 3'
-					},
-					{
-						text: 'Grid 4'
-					},
-					{
-						text: 'Grid 5'
-					},
-					{
-						text: 'Grid 3'
-					},
-					{
-						text: 'Grid 4'
-					},
-					{
-						text: 'Grid 5'
-					},
-					{
-						text: 'Grid 3'
-					},
-					{
-						text: 'Grid 4'
-					},
-					{
-						text: 'Grid 5'
-					}
-				],
+				symList: [],
+				symIndex: 0,
+				symId: 0,
 				current: 0,
 				mode: 'nav',
 				dotsStyles: {
@@ -223,7 +196,9 @@
 				type: "bottom"
 			}
 		},
-		onLoad() {},
+		onLoad() {
+			this.getSymptom()
+		},
 		computed:{
 			skipId(){
 				return 'tab'+this.currTab
@@ -243,6 +218,35 @@
 			toggle() {
 				// open 方法传入参数 等同在 uni-popup 组件上绑定 type属性
 				this.$refs.popup.open(this.type)
+			},
+			bindChange(e){
+				var val = e.target.value
+				this.symIndex = val
+				this.symId = this.symList[val].id
+				this.symptom = this.symList[val].name
+			},
+			comform(){
+				this.visible = false
+				this.$refs.popup.close('bottom')
+			},
+			getSymptom(){
+				// 获取疾病类型列表
+				$H.post('/com/get_disease').then(res => {
+					console.log(res)
+					if(res.code === 1){
+						var obj = {}
+						obj.id = 0
+						obj.name = '疾病类型'
+						var arr = []
+						arr.push(obj)
+						this.symList = arr.concat(res.data.list)
+					}else{
+						uni.showToast({
+							msg: res.msg,
+							icon: 'none'
+						})
+					}
+				})
 			}
 		}
 	}

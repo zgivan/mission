@@ -34,27 +34,27 @@
 				val:[0],
 				list: [{
 					id:1,
-					status: '状态1',
+					name: '状态1',
 					num: 0
 				},{
 					id:2,
-					status: '状态2',
+					name: '状态2',
 					num: 0
 				},{
 					id:3,
-					status: '状态3',
+					name: '状态3',
 					num: 0
 				},{
 					id:4,
-					status: '状态4',
+					name: '状态4',
 					num: 0
 				},{
 					id:5,
-					status: '状态5',
+					name: '状态5',
 					num: 0
 				},{
 					id:6,
-					status: '状态6',
+					name: '状态6',
 					num: 0
 				}],
 				visible: false,
@@ -90,7 +90,7 @@
 			},
 			bindChange(e){
 				var val = e.target.value
-				this.status = this.list[val].status
+				this.status = this.list[val].name
 			},
 			comform(){
 				this.visible = false

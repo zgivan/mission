@@ -5,7 +5,7 @@
 		</view>
 		<picker-view style="height: 400rpx;" indicator-style="height: 80rpx;" :value="val" @change="bindChange">
 			<picker-view-column>
-				<view class="flex align-center justify-center font" v-for="(item,index) in list" :key="index">{{item.status}}({{item.num}})</view>
+				<view class="flex align-center justify-center font" v-for="(item,index) in list" :key="index">{{item.name}}{{item.num?`(${item.num})`:''}}</view>
 			</picker-view-column>
 		</picker-view>
 	</view>
