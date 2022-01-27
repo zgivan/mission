@@ -101,7 +101,7 @@
 				})
 			},
 			getCity(){
-				// 获取疾病类型
+				// 获取城市信息
 				$H.post('/com/get_region').then(res => {
 					console.log(res)
 					if(res.code === 1){
