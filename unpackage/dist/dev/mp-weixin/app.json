@@ -1,0 +1,66 @@
+{
+  "pages": [
+    "pages/tabbar/index/index",
+    "pages/tabbar/news/news",
+    "pages/tabbar/my/my",
+    "pages/tabbar/work/work",
+    "pages/mission/add-patient/add-patient",
+    "pages/mission/mission-detail/mission-detail",
+    "pages/mission/patient-manage/patient-manage",
+    "pages/my/my-inv/my-inv",
+    "pages/my/my-team/my-team",
+    "pages/my/team-patient/team-patient",
+    "pages/my/my-collected/my-collected",
+    "pages/my/my-patient/my-patient",
+    "pages/my/my-integral/my-integral",
+    "pages/my/set-user-info/set-user-info",
+    "pages/my/common-mult-select/common-mult-select"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "广州百科迈",
+    "navigationBarBackgroundColor": "#5ed879",
+    "backgroundColor": "#ededed"
+  },
+  "tabBar": {
+    "borderStyle": "black",
+    "backgroundColor": "#fff",
+    "color": "#000000",
+    "selectedColor": "#5ed879",
+    "list": [
+      {
+        "iconPath": "static/tabbar/mission.png",
+        "selectedIconPath": "static/tabbar/mission_on.png",
+        "text": "任务大厅",
+        "pagePath": "pages/tabbar/index/index"
+      },
+      {
+        "iconPath": "static/tabbar/work.png",
+        "selectedIconPath": "static/tabbar/work_on.png",
+        "text": "工作",
+        "pagePath": "pages/tabbar/work/work"
+      },
+      {
+        "iconPath": "static/tabbar/news.png",
+        "selectedIconPath": "static/tabbar/news_on.png",
+        "text": "资讯",
+        "pagePath": "pages/tabbar/news/news"
+      },
+      {
+        "iconPath": "static/tabbar/center.png",
+        "selectedIconPath": "static/tabbar/center_on.png",
+        "text": "个人中心",
+        "pagePath": "pages/tabbar/my/my"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "123"
+    }
+  },
+  "usingComponents": {
+    "common-fixed-line": "/components/use-components/common-fixed-line"
+  }
+}

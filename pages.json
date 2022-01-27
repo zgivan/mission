@@ -1,0 +1,148 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/tabbar/index/index",
+			"style": {
+				"navigationBarTitleText": "广州百科迈",
+				"enablePullDownRefresh": false
+			}
+		}, 
+		{
+			"path": "pages/tabbar/news/news",
+			"style": {
+				"navigationBarTitleText": "资讯",
+				"enablePullDownRefresh": false
+			}
+		
+		}, {
+			"path": "pages/tabbar/my/my",
+			"style": {
+				"navigationBarTitleText": "个人中心",
+				"enablePullDownRefresh": false
+			}
+		
+		}, {
+			"path": "pages/tabbar/work/work",
+			"style": {
+				"navigationBarTitleText": "工作",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/mission/add-patient/add-patient",
+			"style": {
+				"navigationBarTitleText": "添加意向患者",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/mission/mission-detail/mission-detail",
+			"style": {
+				"navigationBarTitleText": "任务详情",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/mission/patient-manage/patient-manage",
+			"style": {
+				"navigationBarTitleText": "患者管理",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/my/my-inv/my-inv",
+			"style": {
+				"navigationBarTitleText": "邀请",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/my/my-team/my-team",
+			"style": {
+				"navigationBarTitleText": "团队成员",
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/my/team-patient/team-patient",
+			"style": {
+				"navigationBarTitleText": "团队患者",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/my/my-collected/my-collected",
+			"style": {
+				"navigationBarTitleText": "我的收藏",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/my/my-patient/my-patient",
+			"style": {
+				"navigationBarTitleText": "test",
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/my/my-integral/my-integral",
+			"style": {
+				"navigationBarTitleText": "积分",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/my/set-user-info/set-user-info",
+			"style": {
+				"navigationBarTitleText": "个人信息",
+				"enablePullDownRefresh": false
+			}
+
+		}
+	    ,{
+            "path" : "pages/my/common-mult-select/common-mult-select",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "广州百科迈",
+		"navigationBarBackgroundColor": "#5ed879",
+		"backgroundColor": "#ededed"
+	},
+	"tabBar": {
+		"borderStyle": "black",
+		"backgroundColor": "#fff",
+		"color": "#000000",
+		"selectedColor": "#5ed879",
+		"list": [{
+				"iconPath": "static/tabbar/mission.png",
+				"selectedIconPath": "static/tabbar/mission_on.png",
+				"text": "任务大厅",
+				"pagePath": "pages/tabbar/index/index"
+			},
+			{
+				"iconPath": "static/tabbar/work.png",
+				"selectedIconPath": "static/tabbar/work_on.png",
+				"text": "工作",
+				"pagePath": "pages/tabbar/work/work"
+			},
+			{
+				"iconPath": "static/tabbar/news.png",
+				"selectedIconPath": "static/tabbar/news_on.png",
+				"text": "资讯",
+				"pagePath": "pages/tabbar/news/news"
+			},
+			{
+				"iconPath": "static/tabbar/center.png",
+				"selectedIconPath": "static/tabbar/center_on.png",
+				"text": "个人中心",
+				"pagePath": "pages/tabbar/my/my"
+			}
+		]
+	}
+}

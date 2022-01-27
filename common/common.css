@@ -1,0 +1,39 @@
+page,.page{
+	background-color: #ededed;
+	/* #ifndef APP-PLUS-NVUE */
+	min-height: 100%;
+	height: auto;
+	/* #endif */
+	/* #ifdef APP-PLUS-NVUE */
+	flex: 1;
+	/* #endif */ 
+}
+
+/* scroll-view */
+.scroll-row{ width: 100%;white-space: nowrap;overflow-x: auto; }
+.scroll-row-item{ display: inline-block; }
+
+/* 设置主色调字体背景边框等  16c140 */
+.main-bg-color{
+	/* background-color: #dc2609; */
+	background-color: #5ed879;
+}
+.main-border-color{
+	border-color: #5ed879;
+}
+.main-text-color{
+	color: #5ed879;
+}
+.sec-bg-color{
+	background-color: #ff5000;
+}
+.sec-text-color{
+	color: #ff5000;
+}
+.sec-border-color{
+	border-color: #ff5000;
+}
+.button-circle{
+	height: 70rpx;
+	border-radius: 35rpx;
+}
