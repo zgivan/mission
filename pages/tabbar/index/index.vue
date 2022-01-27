@@ -30,7 +30,7 @@
 		
 		<!-- 自定义列表组件 -->
 		<view class="mt-2 bg-white">
-			<block v-for="(i,index) in 6" :key="index">
+			<block v-for="(item,index) in 6" :key="index">
 				<free-list></free-list>
 			</block>
 		</view>
@@ -110,7 +110,12 @@
 		},
 		data() {
 			return {
-				symptom: '疾病类型',
+				symptom: '疾病类型',				//选中的疾病类型
+				symList: [],					//疾病类型列表
+				symIndex: 0,					//当前选中疾病类型项
+				symId: 0,							//当前选中疾病类型ID
+				mList: [],						//任务列表
+				
 				currTab: 0,
 				extraIcon: {
 					color: '#4cd964',
@@ -179,9 +184,6 @@
 						content: '内容 C'
 					}
 				],
-				symList: [],
-				symIndex: 0,
-				symId: 0,
 				current: 0,
 				mode: 'nav',
 				dotsStyles: {
