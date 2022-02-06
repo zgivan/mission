@@ -257,7 +257,7 @@ var _request = _interopRequireDefault(__webpack_require__(/*! @/common/lib/reque
       });
     },
     getCity: function getCity() {var _this4 = this;
-      // 获取疾病类型
+      // 获取城市信息
       _request.default.post('/com/get_region').then(function (res) {
         console.log(res);
         if (res.code === 1) {
