@@ -29,7 +29,7 @@
 				</uni-forms-item>
 				<template v-if="!isBase">
 					<uni-forms-item label="所在城市" required :name="!isBase?'city':''">
-						<uni-data-picker placeholder="请选择所在地区" popup-title="请选择所在地区" :localdata="dataTree" v-model="info.city"
+						<uni-data-picker placeholder="请选择所在地区" popup-title="请选择所在地区" :localdata="citys" v-model="info.city"
 							@change="onchange" @nodeclick="onnodeclick" @popupopened="onpopupopened" @popupclosed="onpopupclosed">
 						</uni-data-picker>
 					</uni-forms-item>
@@ -54,7 +54,7 @@
 		data() {
 			return {
 				isBase: false,
-				dataTree: [{
+				citys: [{
 					text: "广东",
 					value: "1-0",
 					children: [{
@@ -162,6 +162,9 @@
 				}
 			}
 		},
+		onLoad() {
+			this.getCity()
+		},
 		methods: {
 			submit(ref) {
 				if(!checkIdCard()){
@@ -201,7 +204,23 @@
 				}).then(res => {
 					return res.code
 				})
-			}
+			},
+			getCity(){
+				// 获取城市信息
+				$H.post('/com/get_region').then(res => {
+					console.log(res)
+					if(res.code === 1){
+						let cc = res.data.list
+						
+						this.citys = res.data.list
+					}else{
+						uni.showToast({
+							msg: res.msg,
+							icon: 'none'
+						})
+					}
+				})
+			},
 		},
 		components: {
 		}

@@ -317,6 +317,7 @@ var _request = _interopRequireDefault(__webpack_require__(/*! @/common/lib/reque
       this.symIndex = val;
       this.symId = this.symList[val].id;
       this.symptom = this.symList[val].name;
+      this.getMissions();
     },
     comform: function comform() {
       this.visible = false;

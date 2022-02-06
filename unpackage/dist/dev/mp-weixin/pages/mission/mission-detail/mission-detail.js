@@ -154,8 +154,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-var _request = _interopRequireDefault(__webpack_require__(/*! @/common/lib/request.js */ 21));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var freeList = function freeList() {__webpack_require__.e(/*! require.ensure | components/use-components/free-list */ "components/use-components/free-list").then((function () {return resolve(__webpack_require__(/*! @/components/use-components/free-list.vue */ 141));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
+var _vuex = __webpack_require__(/*! vuex */ 13);
+var _request = _interopRequireDefault(__webpack_require__(/*! @/common/lib/request.js */ 21));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var freeList = function freeList() {__webpack_require__.e(/*! require.ensure | components/use-components/free-list */ "components/use-components/free-list").then((function () {return resolve(__webpack_require__(/*! @/components/use-components/free-list.vue */ 141));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
 {
   data: function data() {
     return {
@@ -168,6 +168,13 @@ var _request = _interopRequireDefault(__webpack_require__(/*! @/common/lib/reque
     console.log(this.id);
     this.getDetail();
   },
+  computed: _objectSpread({},
+  (0, _vuex.mapState)({
+    userid: function userid(state) {return state.login.userid;},
+    userinfo: function userinfo(state) {return state.login.userinfo;},
+    loginStatus: function loginStatus(state) {return state.login.loginStatus;} })),
+
+
   methods: {
     getDetail: function getDetail() {var _this = this;
       _request.default.post('/task/details', {
@@ -176,6 +183,50 @@ var _request = _interopRequireDefault(__webpack_require__(/*! @/common/lib/reque
         if (res.code === 1) {
           console.log(res);
           _this.info = res.data.info;
+        } else {
+          uni.showToast({
+            msg: res.msg,
+            icon: 'none' });
+
+        }
+      });
+    },
+    getMission: function getMission() {var _this2 = this;
+      // 领取任务
+      _request.default.post('/task/jointask', {
+        task_id: this.info.id },
+      {
+        header: {
+          Authorization: uni.getStorageSync('auth') } }).
+
+      then(function (res) {
+        console.log(res);
+        if (res.code === 1) {
+          uni.showToast({
+            msg: '领取成功' });
+
+          _this2.getDetail();
+        } else {
+          uni.showToast({
+            msg: res.msg,
+            icon: 'none' });
+
+        }
+      });
+    },
+    collect: function collect() {var _this3 = this;
+      _request.default.post('/task/collection', {
+        task_id: this.info.id },
+      {
+        header: {
+          Authorization: uni.getStorageSync('auth') } }).
+
+      then(function (res) {
+        if (res.code === 1) {
+          uni.showToast({
+            msg: res.msg });
+
+          _this3.getDetail();
         } else {
           uni.showToast({
             msg: res.msg,

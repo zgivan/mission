@@ -265,6 +265,8 @@ var _request = _interopRequireDefault(__webpack_require__(/*! @/common/lib/reque
 
       then(function (result) {
         if (result.code === 1) {
+          console.log('login-auth:' + auth);
+          uni.setStorageSync('auth', auth);
           _this3.login(result.data);
         } else {
           uni.showToast({

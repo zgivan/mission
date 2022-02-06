@@ -17,7 +17,7 @@ export default {
 			}
 		},
 		// 登录
-		login(state,userinfo){
+		login(state,userinfo,auth){
 			state.userinfo = userinfo
 			state.userid = userinfo.id
 			state.loginStatus = true
@@ -29,6 +29,7 @@ export default {
 			state.userid = 0
 			state.loginStatus = false
 			uni.removeStorageSync('userinfo')
+			uni.removeStorageSync('auth')
 		}
 	},
 	actions:{

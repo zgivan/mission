@@ -147,6 +147,7 @@
 				this.symIndex = val
 				this.symId = this.symList[val].id
 				this.symptom = this.symList[val].name
+				this.getMissions()
 			},
 			comform(){
 				this.visible = false

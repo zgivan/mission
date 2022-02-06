@@ -3,8 +3,8 @@
 		<free-search-select :selectList="secList" :hasSelect="true" :currTab="currTab" @changeT="changeTab" :hasSearch="hasSearch"></free-search-select>
 		
 		<view class="mt-2 bg-white" v-if="currTab < 3">
-			<block v-for="(i,index) in 5" :key="index">
-				<free-list :type="type"></free-list>
+			<block v-for="(item,index) in list" :key="index">
+				<free-list :type="type" :item="item"></free-list>
 			</block>
 		</view>
 		
@@ -18,6 +18,8 @@
 	import freeSearchSelect from '@/components/use-components/free-search-select.vue'
 	import freePatientItem from '@/components/use-components/free-patient-item.vue'
 	import freeList from '@/components/use-components/free-list.vue'
+	
+	import $H from '@/common/lib/request.js'
 	export default {
 		data() {
 			return {
@@ -61,7 +63,9 @@
 						status: '筛选失败',						
 						remark: '无意愿参加试验'
 					}
-				]
+				],
+				list: [],
+				page: 1
 			}
 		},
 		methods: {
@@ -72,6 +76,7 @@
 				}else{
 					if(index === 0){
 						this.type = 4
+						this.getCollected()
 					}else if(index === 2){
 						this.type = 1
 					}
@@ -83,12 +88,35 @@
 				uni.navigateTo({
 					url: '/pages/mission/patient-manage/patient-manage'
 				});
+			},
+			getCollected(){
+				// 获取收藏列表
+				$H.post('/task/mycollection',{
+					city: '',
+					symptom: this.symId
+				},{
+					header:{
+						Authorization: uni.getStorageSync('auth'),
+					},
+				}).then(res => {
+					if(res.code === 1){
+						this.list = res.data.list
+					}else{
+						uni.showToast({
+							msg: res.msg,
+							icon: 'none'
+						})
+					}
+				})
 			}
 		},
 		components:{
 			freeSearchSelect,
 			freeList,
 			freePatientItem
+		},
+		onShow() {
+			this.getCollected()
 		}
 	}
 </script>

@@ -106,6 +106,8 @@
 					},
 				}).then(result => {
 					if(result.code === 1){
+						console.log('login-auth:'+auth)
+						uni.setStorageSync('auth',auth)
 						this.login(result.data)
 					}else{
 						uni.showToast({

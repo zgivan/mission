@@ -3575,7 +3575,7 @@ module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-
       }
     },
     // 登录
-    login: function login(state, userinfo) {
+    login: function login(state, userinfo, auth) {
       state.userinfo = userinfo;
       state.userid = userinfo.id;
       state.loginStatus = true;
@@ -3587,6 +3587,7 @@ module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-
       state.userid = 0;
       state.loginStatus = false;
       uni.removeStorageSync('userinfo');
+      uni.removeStorageSync('auth');
     } },
 
   actions: {} };exports.default = _default;

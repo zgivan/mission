@@ -128,7 +128,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var freeSearchSelect = function freeSearchSelect() {__webpack_require__.e(/*! require.ensure | components/use-components/free-search-select */ "components/use-components/free-search-select").then((function () {return resolve(__webpack_require__(/*! @/components/use-components/free-search-select.vue */ 174));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var freePatientItem = function freePatientItem() {__webpack_require__.e(/*! require.ensure | components/use-components/free-patient-item */ "components/use-components/free-patient-item").then((function () {return resolve(__webpack_require__(/*! @/components/use-components/free-patient-item.vue */ 212));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var freeList = function freeList() {__webpack_require__.e(/*! require.ensure | components/use-components/free-list */ "components/use-components/free-list").then((function () {return resolve(__webpack_require__(/*! @/components/use-components/free-list.vue */ 141));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
 
 
 
@@ -148,6 +148,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+var _request = _interopRequireDefault(__webpack_require__(/*! @/common/lib/request.js */ 21));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var freeSearchSelect = function freeSearchSelect() {__webpack_require__.e(/*! require.ensure | components/use-components/free-search-select */ "components/use-components/free-search-select").then((function () {return resolve(__webpack_require__(/*! @/components/use-components/free-search-select.vue */ 174));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var freePatientItem = function freePatientItem() {__webpack_require__.e(/*! require.ensure | components/use-components/free-patient-item */ "components/use-components/free-patient-item").then((function () {return resolve(__webpack_require__(/*! @/components/use-components/free-patient-item.vue */ 212));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var freeList = function freeList() {__webpack_require__.e(/*! require.ensure | components/use-components/free-list */ "components/use-components/free-list").then((function () {return resolve(__webpack_require__(/*! @/components/use-components/free-list.vue */ 141));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
 {
   data: function data() {
     return {
@@ -189,9 +191,11 @@ __webpack_require__.r(__webpack_exports__);
         projectName: '测试项目名',
         createTime: '2022-01-13 09:41:50',
         status: '筛选失败',
-        remark: '无意愿参加试验' }] };
+        remark: '无意愿参加试验' }],
 
 
+      list: [],
+      page: 1 };
 
   },
   methods: {
@@ -202,6 +206,7 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         if (index === 0) {
           this.type = 4;
+          this.getCollected();
         } else if (index === 2) {
           this.type = 1;
         }
@@ -213,12 +218,36 @@ __webpack_require__.r(__webpack_exports__);
       uni.navigateTo({
         url: '/pages/mission/patient-manage/patient-manage' });
 
+    },
+    getCollected: function getCollected() {var _this = this;
+      // 获取收藏列表
+      _request.default.post('/task/mycollection', {
+        city: '',
+        symptom: this.symId },
+      {
+        header: {
+          Authorization: uni.getStorageSync('auth') } }).
+
+      then(function (res) {
+        if (res.code === 1) {
+          _this.list = res.data.list;
+        } else {
+          uni.showToast({
+            msg: res.msg,
+            icon: 'none' });
+
+        }
+      });
     } },
 
   components: {
     freeSearchSelect: freeSearchSelect,
     freeList: freeList,
-    freePatientItem: freePatientItem } };exports.default = _default;
+    freePatientItem: freePatientItem },
+
+  onShow: function onShow() {
+    this.getCollected();
+  } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ })

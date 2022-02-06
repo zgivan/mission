@@ -222,7 +222,7 @@ var _request = _interopRequireDefault(__webpack_require__(/*! @/common/lib/reque
   data: function data() {
     return _defineProperty({
       isBase: false,
-      dataTree: [{
+      citys: [{
         text: "广东",
         value: "1-0",
         children: [{
@@ -330,6 +330,9 @@ var _request = _interopRequireDefault(__webpack_require__(/*! @/common/lib/reque
 
 
   },
+  onLoad: function onLoad() {
+    this.getCity();
+  },
   methods: {
     submit: function submit(ref) {var _this = this;
       if (!checkIdCard()) {
@@ -368,6 +371,22 @@ var _request = _interopRequireDefault(__webpack_require__(/*! @/common/lib/reque
         idcar: this.info.idcard }).
       then(function (res) {
         return res.code;
+      });
+    },
+    getCity: function getCity() {var _this2 = this;
+      // 获取城市信息
+      _request.default.post('/com/get_region').then(function (res) {
+        console.log(res);
+        if (res.code === 1) {
+          var cc = res.data.list;
+
+          _this2.citys = res.data.list;
+        } else {
+          uni.showToast({
+            msg: res.msg,
+            icon: 'none' });
+
+        }
       });
     } },
 
