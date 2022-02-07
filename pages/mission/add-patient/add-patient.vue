@@ -3,14 +3,14 @@
 		<view class="example bg-white">
 			<!-- 基础表单校验 -->
 			<uni-forms ref="valiForm" :rules="rules" :modelValue="info">
-				<uni-forms-item label="姓名" required name="name">
-					<uni-easyinput v-model="info.name" placeholder="请输入姓名" />
+				<uni-forms-item label="姓名" required name="fullname">
+					<uni-easyinput v-model="info.fullname" placeholder="请输入姓名" />
 				</uni-forms-item>
 				<uni-forms-item label="性别" required name="sex">
 					<uni-data-checkbox v-model="info.sex" :localdata="sexs" />
 				</uni-forms-item>
-				<uni-forms-item label="身份证" required name="idcard">
-					<uni-easyinput type="idcard" v-model="info.idcard" placeholder="请输入身份证" />
+				<uni-forms-item label="身份证" required name="idnumber">
+					<uni-easyinput type="idcard" v-model="info.idnumber" placeholder="请输入身份证" />
 				</uni-forms-item>
 				<uni-forms-item label="年龄" required name="age">
 					<uni-easyinput type="number" v-model="info.age" placeholder="请输入年龄" />
@@ -54,39 +54,7 @@
 		data() {
 			return {
 				isBase: false,
-				citys: [{
-					text: "广东",
-					value: "1-0",
-					children: [{
-						text: "广州",
-						value: "1-1",
-						children: [{
-							text: "白云",
-							value: "1-1-1"
-						}]
-					},
-					{
-						text: "东城",
-						value: "1-2"
-					}]
-				},
-				{
-					text: "天津",
-					value: "2-0",
-					children: [{
-						text: "2.1班",
-						value: "2-1"
-					},
-					{
-						text: "2.2班",
-						value: "2-2"
-					}]
-				},
-				{
-					text: "河北",
-					value: "3-0",
-					disable: true
-				}],
+				citys: [],
 				info: {
 					name: '张三',
 					sex: 0
@@ -100,7 +68,7 @@
 					value: 1
 				}],
 				rules: {
-					name: {
+					fullname: {
 						rules: [{
 							required: true,
 							errorMessage: '姓名不能为空'
@@ -112,7 +80,7 @@
 							errorMessage: '请选择性别'
 						}]
 					},
-					idcard: {
+					idnumber: {
 						rules: [{
 							required: true,
 							errorMessage: '身份证不能为空'
@@ -149,10 +117,10 @@
 					}
 				},
 				info: {
-					name: '',
+					fullname: '',
 					age: '',
 					introduction: '',
-					idcard: '',
+					idnumber: '',
 					sex: '',
 					phone:'',
 					height: '',
@@ -162,7 +130,7 @@
 				}
 			}
 		},
-		onLoad() {
+		mounted() {
 			this.getCity()
 		},
 		methods: {
@@ -208,11 +176,33 @@
 			getCity(){
 				// 获取城市信息
 				$H.post('/com/get_region').then(res => {
-					console.log(res)
 					if(res.code === 1){
-						let cc = res.data.list
-						
-						this.citys = res.data.list
+						let cc = []
+						let obj = {}
+						res.data.list.map((item) => {
+							obj = item
+							obj['text'] = item['name']
+							obj['value'] = item['id']
+							delete obj['name']
+							delete obj['id']
+							this.$nextTick(function(){
+								let obj1 = {}
+								let arr = []
+								item.children.map((ch) => {
+									obj1 = ch
+									obj1['text'] = ch['name']
+									obj1['value'] = ch['id']
+									delete obj1['name']
+									delete obj1['id']
+									arr.push(obj1)
+								})
+								obj['children'] = arr
+							})
+							cc.push(obj)
+							
+							console.log(cc)
+						})
+						this.citys = cc
 					}else{
 						uni.showToast({
 							msg: res.msg,

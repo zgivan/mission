@@ -106,6 +106,54 @@ const types = {
 	},
 	idcard(value) {
 		return typeof value === 'string' && !!value.match(pattern.idcard);
+		// let vCity = ['11','12','13','14','15','21','22','23','31','32','33','34','35','36','37','41','42','43','44','45','46','50','51','52','53','54','61','62','63','64','65','71','81','82','91'];
+		
+		// if(!value.match('/^([\d]{17}[xX\d]|[\d]{15})$/')) return false
+		// if(vCity.indexOf(value.substr(0,2)) == -1) return false
+		
+		// value = value.replace('/[xX]$/i', 'a')
+		// let length  = value.length
+		// let birth = ''
+		// if(length == 18){
+		// 	birth = value.substr(6,4) + '-' + value.substr(10,2) + '-' + value.substr(12,2)
+		// }else{
+		// 	birth = '19' + value.substr(6,2) + '-' + value.substr(8,2) + '-' + value.substr(10,2)
+		// }
+		// let d = newDate(birth).getTime()/1000    //出生日期的时间戳
+		
+		/**
+		 * 判断是否为合法的身份证号码
+		 * @param $mobile
+		 * @return int
+		 */
+		// function isCreditNo($vStr){
+		//     $vCity = array(
+		//         '11','12','13','14','15','21','22',
+		//         '23','31','32','33','34','35','36',
+		//         '37','41','42','43','44','45','46',
+		//         '50','51','52','53','54','61','62',
+		//         '63','64','65','71','81','82','91'
+		//     );
+		//     if (!preg_match('/^([\d]{17}[xX\d]|[\d]{15})$/', $vStr)) return false;
+		//     if (!in_array(substr($vStr, 0, 2), $vCity)) return false;
+		//     $vStr = preg_replace('/[xX]$/i', 'a', $vStr);
+		//     $vLength = strlen($vStr);
+		//     if ($vLength == 18) {
+		//         $vBirthday = substr($vStr, 6, 4) . '-' . substr($vStr, 10, 2) . '-' . substr($vStr, 12, 2);
+		//     } else {
+		//         $vBirthday = '19' . substr($vStr, 6, 2) . '-' . substr($vStr, 8, 2) . '-' . substr($vStr, 10, 2);
+		//     }
+		//     if (date('Y-m-d', strtotime($vBirthday)) != $vBirthday) return false;
+		//     if ($vLength == 18) {
+		//         $vSum = 0;
+		//         for ($i = 17 ; $i >= 0 ; $i--) {
+		//             $vSubStr = substr($vStr, 17 - $i, 1);
+		//             $vSum += (pow(2, $i) % 11) * (($vSubStr == 'a') ? 10 : intval($vSubStr , 11));
+		//         }
+		//         if($vSum % 11 != 1) return false;
+		//     }
+		//     return true;
+		// }
 	},
 	phone(value) {
 		let pattern=/(^(([0\+]\d{2,3}-)?(0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$)|(^0{0,1}1[3|4|5|6|7|8|9][0-9]{9}$)/
