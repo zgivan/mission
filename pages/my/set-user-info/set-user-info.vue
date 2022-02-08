@@ -16,7 +16,7 @@
 					<uni-data-checkbox v-model="info.sex" :localdata="sexs" />
 				</uni-forms-item>
 				<uni-forms-item label="服务城市" required name="name">
-					<view @click="toSelect('city')"" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end" style="height: 72rpx;">请选择服务城市</view>
+					<view @click="toSelect('city')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end" style="height: 72rpx;">请选择服务城市</view>
 				</uni-forms-item>
 				<uni-forms-item label="感兴趣疾病类型" required name="name">
 					<view @click="toSelect('symptom')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end" style="height: 72rpx;">请选择疾病类型</view>

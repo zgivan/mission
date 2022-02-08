@@ -51,6 +51,19 @@ function isEmptyValue(value, type) {
 	return false;
 }
 
+function changeDate(date){
+	var d = new Date(new Date(date).getTime())
+	return d.getFullYear() + '-' + addzero(d.getMonth()+1) + '-' + addzero(d.getDate())
+}
+
+function addzero(s){
+	if(s>9){
+		return s
+	}else{
+		return '0'+s
+	}
+}
+
 const types = {
 	integer(value) {
 		return types.number(value) && parseInt(value, 10) === value;
@@ -105,21 +118,33 @@ const types = {
 		return typeof value === 'function';
 	},
 	idcard(value) {
-		return typeof value === 'string' && !!value.match(pattern.idcard);
-		// let vCity = ['11','12','13','14','15','21','22','23','31','32','33','34','35','36','37','41','42','43','44','45','46','50','51','52','53','54','61','62','63','64','65','71','81','82','91'];
+		// return typeof value === 'string' && !!value.match(pattern.idcard);
+		let vCity = ['11','12','13','14','15','21','22','23','31','32','33','34','35','36','37','41','42','43','44','45','46','50','51','52','53','54','61','62','63','64','65','71','81','82','91'];
 		
-		// if(!value.match('/^([\d]{17}[xX\d]|[\d]{15})$/')) return false
-		// if(vCity.indexOf(value.substr(0,2)) == -1) return false
+		if(!value.match(pattern.idcard)) return false
+		if(vCity.indexOf(value.substr(0,2)) == -1) return false
 		
-		// value = value.replace('/[xX]$/i', 'a')
-		// let length  = value.length
-		// let birth = ''
-		// if(length == 18){
-		// 	birth = value.substr(6,4) + '-' + value.substr(10,2) + '-' + value.substr(12,2)
-		// }else{
-		// 	birth = '19' + value.substr(6,2) + '-' + value.substr(8,2) + '-' + value.substr(10,2)
-		// }
-		// let d = newDate(birth).getTime()/1000    //出生日期的时间戳
+		value = value.replace('/[xX]$/i', 'a')
+		let length  = value.length
+		let birth = ''
+		if(length == 18){
+			birth = value.substr(6,4) + '-' + value.substr(10,2) + '-' + value.substr(12,2)
+		}else{
+			birth = '19' + value.substr(6,2) + '-' + value.substr(8,2) + '-' + value.substr(10,2)
+		}
+		
+		if(changeDate(birth) != birth) return false
+		
+		if(length == 18){
+			let sum = 0
+			for(let i=17;i>=0;i--){
+				let vSubStr = value.substr(17-i,1)
+				sum += (Math.pow(2,i)%11)*((vSubStr == 'a') ? 10 : parseInt(vSubStr,11))
+			}
+			if(sum % 11 != 1) return false
+		}
+		
+		return true
 		
 		/**
 		 * 判断是否为合法的身份证号码

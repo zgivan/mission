@@ -85,10 +85,10 @@
 							required: true,
 							errorMessage: '身份证不能为空'
 						}
-						// , {
-						// 	format: 'idcard',
-						// 	errorMessage: '身份证格式错误'
-						// }
+						, {
+							format: 'idcard',
+							errorMessage: '身份证格式错误'
+						}
 						]
 					},
 					age: {
@@ -135,13 +135,6 @@
 		},
 		methods: {
 			submit(ref) {
-				if(!checkIdCard()){
-					uni.showToast({
-						msg: '身份证格式错误',
-						icon: 'none'
-					})
-					return 
-				}
 				console.log(this.$refs[ref])
 				this.$refs[ref].validate().then(res => {
 					console.log('success', this.valiFormData);

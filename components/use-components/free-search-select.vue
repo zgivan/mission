@@ -65,6 +65,11 @@
 				default: false
 			}
 		},
+		data(){
+			return {
+				searchValue: ''
+			}
+		},
 		computed:{
 			lineHeight(){
 				let h = 0
@@ -97,6 +102,7 @@
 					title: '搜索：' + res.value,
 					icon: 'none'
 				})
+				this.$emit('search',this.searchValue)
 			},
 			input(res) {
 				console.log('----input:', res)

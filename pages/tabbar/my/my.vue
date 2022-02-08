@@ -48,7 +48,8 @@
 		},
 		onLoad:function(){
 			this.initUser()
-			console.log(this.userinfo)
+			// console.log(this.userinfo)
+			// console.log(parseInt(8,11))
 		},
 		methods: {
 			...mapMutations(['login','initUser']),

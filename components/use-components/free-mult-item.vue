@@ -15,11 +15,15 @@
 			index: {
 				type: Number,
 				default: 0
+			},
+			idx: {   //当选项为二维数组的时候使用
+				type: [Number,String],
+				default: ''
 			}
 		},
 		methods:{
 			toggle(){
-				this.$emit('toggle',this.index)
+				this.$emit('toggle',this.index,this.idx)
 			}
 		}
 	}

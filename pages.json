@@ -6,21 +6,28 @@
 				"navigationBarTitleText": "广州百科迈",
 				"enablePullDownRefresh": false
 			}
-		}, 
+		},
+		{
+			"path": "pages/my/set-user-info/set-user-info",
+			"style": {
+				"navigationBarTitleText": "个人信息",
+				"enablePullDownRefresh": false
+			}
+		},
 		{
 			"path": "pages/tabbar/news/news",
 			"style": {
 				"navigationBarTitleText": "资讯",
 				"enablePullDownRefresh": false
 			}
-		
+
 		}, {
 			"path": "pages/tabbar/my/my",
 			"style": {
 				"navigationBarTitleText": "个人中心",
 				"enablePullDownRefresh": false
 			}
-		
+
 		}, {
 			"path": "pages/tabbar/work/work",
 			"style": {
@@ -80,7 +87,7 @@
 		{
 			"path": "pages/my/my-patient/my-patient",
 			"style": {
-				"navigationBarTitleText": "test",
+				"navigationBarTitleText": "我的患者",
 				"enablePullDownRefresh": false
 			}
 		}, {
@@ -91,23 +98,14 @@
 			}
 
 		}, {
-			"path": "pages/my/set-user-info/set-user-info",
+			"path": "pages/my/common-mult-select/common-mult-select",
 			"style": {
-				"navigationBarTitleText": "个人信息",
+				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
 
 		}
-	    ,{
-            "path" : "pages/my/common-mult-select/common-mult-select",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "广州百科迈",
