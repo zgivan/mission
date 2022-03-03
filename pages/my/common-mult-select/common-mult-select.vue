@@ -70,7 +70,15 @@
 				}).then(res => {
 					console.log(res)
 					if(res.code === 1){
-						this.list = res.data
+						let ret = res.data
+						this.$nextTick(function(){
+							ret.map(v=>{
+								if(this.cids.indexOf(v.id) > -1){
+									v.checked = true
+								}
+							})
+							this.list = ret
+						})
 					}else{
 						uni.showToast({
 							msg: res.msg,
@@ -84,11 +92,16 @@
 				$H.post('/com/department').then(res => {
 					console.log(res)
 					if(res.code === 1){
-						var list = res.data.list
-						// list.map(item=>{
-						// 	item.checked = false
-						// })
-						this.list = list
+						let ret = res.data.list
+						this.$nextTick(function(){
+							ret.map(v=>{
+								if(this.cids.indexOf(v.id.toString()) > -1){
+									v.checked = true
+								}
+							})
+							console.log(ret)
+							this.list = ret
+						})
 					}else{
 						uni.showToast({
 							msg: res.msg,
@@ -102,11 +115,16 @@
 				$H.post('/com/get_disease').then(res => {
 					console.log(res)
 					if(res.code === 1){
-						var list = res.data.list
-						// list.map(item=>{
-						// 	item.checked = false
-						// })
-						this.list = list
+						let ret = res.data.list
+						this.$nextTick(function(){
+							ret.map(v=>{
+								if(this.cids.indexOf(v.id.toString()) > -1){
+									v.checked = true
+								}
+							})
+							console.log(ret)
+							this.list = ret
+						})
 					}else{
 						uni.showToast({
 							msg: res.msg,
@@ -115,13 +133,30 @@
 					}
 				})
 			},
-			getCity(){
+			getCitys(){
 				// 获取城市信息
 				$H.post('/com/get_region').then(res => {
-					console.log(res)
 					if(res.code === 1){
-						this.list = res.data.list
-						console.log(this.list)
+						console.log(res.data.list)
+						let ret = res.data.list
+						// this.$nextTick(function(){
+							for(let i = 0;i<ret.length;i++){
+								for(let j=0;j<ret[i].children.length;j++){
+									if(this.cids.indexOf(ret[i].children[j].id) > -1){
+										ret[i].children[j].checked = true
+									}
+								}
+							}
+							// ret.map(item=>{
+							// 	item.children.map(v=>{
+							// 		if(this.cids.indexOf(v.id.toString()) > -1){
+							// 			v.checked = true
+							// 		}
+							// 	})
+							// })
+							// console.log(ret)
+							this.list = ret
+						// })
 					}else{
 						uni.showToast({
 							msg: res.msg,
@@ -161,18 +196,12 @@
 				this.$forceUpdate()
 			},
 			save(){
-				console.log(this.cids)
-				console.log(this.cnames)
-				// let arr = []   //筛选选中的项
-				// let selList = []
-				// if(this.type === 'city'){
-					
-				// }else{
-				// 	selList = this.list.filter((item)=>item.checked === true)
-				// 	arr = selList.map(item => {
-				// 		return item.id
-				// 	})
-				// }
+				let data = {
+					cids: this.cids.join(','),
+					cnames: this.cnames.join(',')
+				}
+				this.$eventHub.$emit('setIds',data);
+				uni.navigateBack({})
 			},
 			change(e) {
 				console.log(e);
@@ -199,30 +228,8 @@
 				// 获取城市信息
 				$H.post('/com/get_region').then(res => {
 					if(res.code === 1){
-						let cc = []
-						let obj = {}
-						res.data.list.map((item) => {
-							obj = item
-							obj['text'] = item['name']
-							obj['value'] = item['id']
-							delete obj['name']
-							delete obj['id']
-							this.$nextTick(function(){
-								let obj1 = {}
-								let arr = []
-								item.children.map((ch) => {
-									obj1 = ch
-									obj1['text'] = ch['name']
-									obj1['value'] = ch['id']
-									delete obj1['name']
-									delete obj1['id']
-									arr.push(obj1)
-								})
-								obj['children'] = arr
-							})
-							cc.push(obj)
-						})
-						this.citys = cc
+						console.log(res)
+						this.citys = res.data.list
 					}else{
 						uni.showToast({
 							msg: res.msg,
@@ -238,6 +245,11 @@
 		},
 		onLoad(option) {
 			this.type = option.type
+			
+			this.cids = option.ids === '' ? [] : option.ids.split(',')
+			this.cnames = option.names === '' ? [] : option.names.split(',')
+			console.log(this.cids)
+			console.log(this.cnames)
 			if(this.type === 'hospital'){
 				this.getHosp()
 				this.getCity()
@@ -255,7 +267,7 @@
 					title: '选择感兴趣疾病类型'
 				})
 			}else{
-				this.getCity()
+				this.getCitys()
 				uni.setNavigationBarTitle({
 					title: '选择服务城市'
 				})

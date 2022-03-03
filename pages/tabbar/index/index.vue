@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<!-- <uni-card padding="0" spacing="0" margin="0"> -->
+		<mescroll-body ref="mescrollRef" @init="mescrollInit" @down="downCallback" @up="upCallback">
 			<uni-swiper-dot class="uni-swiper-dot-box" @clickItem=clickItem :info="info" :current="current" :mode="mode" :dots-styles="dotsStyles" field="content">
 				<swiper class="swiper-box" @change="change" :current="swiperDotIndex" autoplay circular>
 					<swiper-item v-for="(item, index) in info" :key="index">
@@ -10,31 +10,27 @@
 					</swiper-item>
 				</swiper>
 			</uni-swiper-dot>
-		<!-- </uni-card> -->
 		<view class="mt-2 pb-2 bg-white">
-			<!-- <uni-card padding="0" spacing="0" margin="0"> -->
-				<uni-search-bar @confirm="search" :focus="searchFocus" placeholder="请输入招募项目/研究中心/登记编号/药物名" v-model="searchValue" @blur="blur" @focus="focus" @input="input"  bgColor="#EEEEEE"
-					@cancel="cancel" @clear="clear">
-				</uni-search-bar>
-				<view class="flex px-3">
-					<view class="font-sm flex-1 flex align-center justify-center" @click="toggle()">{{symptom}}</view>
-					<view class="font-sm flex-1 flex align-center justify-center">所在城市</view>
-					<view class="font-sm flex-1 flex align-center justify-center">佣金</view>
+			<uni-search-bar @confirm="search" placeholder="请输入招募项目/研究中心/登记编号/药物名" v-model="searchValue" bgColor="#EEEEEE">
+			</uni-search-bar>
+			<view class="flex px-3">
+				<view class="font-sm flex-1 flex align-center justify-center" @click="toggle()">{{symptom}}</view>
+				<view class="font-sm flex-1 flex align-center justify-center">
+					<uni-data-picker placeholder="所在地区" popup-title="所在地区" :localdata="citys" :border="false" v-model="info.city"
+						@change="onchange" @nodeclick="onnodeclick" @popupopened="onpopupopened" @popupclosed="onpopupclosed">
+					</uni-data-picker>
 				</view>
-			<!-- </uni-card> -->
+				<view class="font-sm flex-1 flex align-center justify-center" @click="changeIntegral">佣金</view>
+			</view>
 		</view>
-		<!-- <view class="mt-3">
-			<uni-card padding="0" spacing="0" margin="0">
-			</uni-card>
-		</view> -->
-		
 		<!-- 自定义列表组件 -->
 		<view class="mt-2 bg-white">
 			<block v-for="(item,index) in mList" :key="index">
-				<free-list :item="item" @detail="toDetail"></free-list>
+				<free-list :item="item" @detail="toDetail" @join="showJoin"></free-list>
 			</block>
 		</view>
 		
+		</mescroll-body>
 		<!-- 选择疾病类型 -->
 		<uni-popup ref="popup" background-color="#fff">
 			<view class="popup-content" :class="{ 'popup-height': type === 'left' || type === 'right' }">
@@ -45,34 +41,18 @@
 		<!-- 悬浮按钮 -->
 		<navigator url="/pages/mission/add-patient/add-patient" class="position-fixed rounded-circle main-bg-color text-white flex align-center justify-center font-lg" style="width:60rpx;height:60rpx;bottom: 30rpx;right: 30rpx;">＋</navigator>
 		
-		<!-- 自定义资讯组件 -->
-		<view class="mt-3">
-			
-		</view>
-		<!-- 自定义头部选项卡 -->
-		<!-- scroll-into-view 要跳转到的选项id -->
-		<!-- <scroll-view scroll-x="true" class="scroll-row" scroll-left="100" :scroll-into-view="skipId">
-			<block v-for="(i,index) in 12">
-				<view class="scroll-row-item mr-2 font" :id="'tab'+i" :class="currTab===i?'border-bottom main-border-color main-text-color':''" @click="changeTab(i)">选项{{i+1}}</view>
-			</block>
-		</scroll-view> -->
-		
-		<!-- 列表形式组件 -->
-		<!-- <uni-section title="显示图标或图片" type="line" :padding="false">
-			<uni-list>
-				<uni-list-item show-extra-icon showArrow :extra-icon="extraIcon" title="列表左侧带扩展图标" />
-			</uni-list>
-		</uni-section> -->
 	</view>
 </template>
 
 <script>
 	import freeList from '@/components/use-components/free-list.vue'
 	import freeSingleSelect from '@/components/use-components/free-single-select.vue'
+	import MescrollMixin from "@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js";
 	
 	import $H from '@/common/lib/request.js'
 	
 	export default {
+		mixins: [MescrollMixin],
 		components: {
 			freeList,
 			freeSingleSelect
@@ -84,13 +64,7 @@
 				symIndex: 0,					//当前选中疾病类型项
 				symId: '',							//当前选中疾病类型ID
 				mList: [],						//任务列表
-				
 				currTab: 0,
-				extraIcon: {
-					color: '#4cd964',
-					size: '22',
-					type: 'gear-filled'
-				},
 				info: [{
 						url: 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-dc-site/094a9dc0-50c0-11eb-b680-7980c8a877b8.jpg',
 						content: '内容 A'
@@ -115,12 +89,15 @@
 				},
 				swiperDotIndex: 0,
 				searchFocus: false,
-				type: "bottom"
+				type: "bottom",
+				citys: [],
+				city: '',
+				integral: ''
 			}
 		},
 		onLoad() {
 			this.getSymptom()
-			this.getMissions()
+			this.getCity()
 		},
 		computed:{
 			skipId(){
@@ -128,6 +105,90 @@
 			}
 		},
 		methods: {
+			showJoin(id){
+				// 询问是否领取任务
+				uni.showModal({
+					title: '是否领取该任务？',
+					cancelText: '取消',
+					confirmText: '确定',
+					success: (res) => {
+						if(res.confirm){
+							//领取任务操作
+							this.joinMission(id)
+						}
+					}
+				})
+			},
+			joinMission(id){
+				//领取任务
+				uni.showLoading({
+					title: '提交中'
+				})
+				$H.post('/task/jointask',{
+					task_id: id
+				},{
+					header: {
+						Authorization: uni.getStorageSync('auth')
+					}
+				}).then(res => {
+					uni.hideLoading()
+					if(res.code === 1){
+						uni.showToast({
+							title: res.msg
+						})
+					}else{
+						uni.showToast({
+							title: res.msg,
+							icon: 'none'
+						})
+					}
+				})
+			},
+			onnodeclick(e) {
+				if(e.level === 1){
+					this.city = e.id
+					this.refreshLists()
+				}else{
+					if(e.value === ''){
+						this.city = e.value
+						this.refreshLists()
+					}
+				}
+			},
+			onpopupopened(e) {
+				console.log('popupopened');
+			},
+			onpopupclosed(e) {
+				
+			},
+			changeIntegral(){
+				this.integral = this.integral === 'DESC' ? 'ASC' : 'DESC'
+				this.refreshLists()
+			},
+			onchange(e) {},
+			getCity(){
+				// 获取城市信息
+				$H.post('/com/get_region').then(res => {
+					if(res.code === 1){
+						let obj = {}
+						obj.text = '所有城市'
+						obj.value = ''
+						let list = res.data.list
+						list.unshift(obj)
+						this.citys = list
+					}else{
+						uni.showToast({
+							msg: res.msg,
+							icon: 'none'
+						})
+					}
+				})
+			},
+			search(e){
+				// 关键字搜索
+				this.keyword = e.value
+				this.refreshLists()
+			},
 			changeTab(index){
 				this.currTab = index
 			},
@@ -147,7 +208,7 @@
 				this.symIndex = val
 				this.symId = this.symList[val].id
 				this.symptom = this.symList[val].name
-				this.getMissions()
+				this.refreshLists()
 			},
 			comform(){
 				this.visible = false
@@ -172,19 +233,49 @@
 					}
 				})
 			},
-			getMissions(){
+			upCallback(page){
+				this.getMissions(page)
+			},
+			refreshLists(){
+				this.mList = []
+				this.mescroll.resetUpScroll()
+			},
+			getMissions(page){
+				// 读取任务列表
+				uni.showLoading({
+					title: '加载中...',
+					mask: true
+				})
 				$H.post('/task/list',{
-					city: '',
-					symptom: this.symId
+					city: this.city,
+					symptom: this.symId,
+					page: page.num,
+					size: page.size,
+					// keyword: this.keyword,
+					integral: this.integral
+				},{
+					header: {
+						Authorization: uni.getStorageSync('auth')
+					}
 				}).then(res => {
-					console.log(res)
+					uni.hideLoading()
 					if(res.code === 1){
-						this.mList = res.data.list
+						this.mescroll.endSuccess(res.data.list.length);  
+						console.log(page.num)
+						if(page.num === 1){
+							console.log(res)
+							this.mList = res.data.list
+						}else{
+							this.mList = this.mList.concat(res.data.list)
+						}	
 					}else{
 						uni.showToast({
 							msg: res.msg,
 							icon: 'none'
 						})
+						if(page.num === 1){
+							this.mList = []
+						}
 					}
 				})
 			},

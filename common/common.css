@@ -37,3 +37,16 @@ page,.page{
 	height: 70rpx;
 	border-radius: 35rpx;
 }
+
+.common-text-light{
+	color: #999;
+}
+.common-text-muted{
+	color: #666;
+}
+.common-text-dark{
+	color: #333;
+}
+.red-star{
+	color: #dd524d;
+}

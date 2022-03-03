@@ -1,8 +1,7 @@
 <template>
 	<view>
 		<view class="bg-white" :class="isFixed?'position-fixed fixed-top':''">
-			<uni-search-bar v-if="hasSearch" @confirm="search" :focus="searchFocus" placeholder="请输入关键字" v-model="searchValue" @blur="blur" @focus="focus" @input="input"  bgColor="#EEEEEE"
-				@cancel="cancel" @clear="clear">
+			<uni-search-bar v-if="hasSearch" @confirm="search" :focus="searchFocus" placeholder="请输入关键字" v-model="searchValue" bgColor="#EEEEEE">
 			</uni-search-bar>
 			<view class="flex align-center px-2" v-if="hasSelect">
 				<block v-for="(item,index) in selectList" :key="index">
@@ -75,7 +74,7 @@
 				let h = 0
 				if(this.isFixed){
 					if(this.hasSearch){
-						h += 112
+						h += 104
 					}
 					if(this.hasTab){
 						h += 70
@@ -87,10 +86,7 @@
 						h += 70
 					}
 				}				
-				// #ifdef H5
-				h = h - 90
-				// #endif
-				return h + 'rpx'
+				return uni.upx2px(h) + 'px'
 			}
 		},
 		methods:{
@@ -98,14 +94,7 @@
 				this.$emit('changeT',index)
 			},
 			search(res) {
-				uni.showToast({
-					title: '搜索：' + res.value,
-					icon: 'none'
-				})
-				this.$emit('search',this.searchValue)
-			},
-			input(res) {
-				console.log('----input:', res)
+				this.$emit('search',res.value)
 			}
 		}
 	}

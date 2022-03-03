@@ -104,6 +104,13 @@
 				"enablePullDownRefresh": false
 			}
 
+		}, {
+			"path": "pages/news/news-detail/news-detail",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
 		}
 	],
 	"globalStyle": {

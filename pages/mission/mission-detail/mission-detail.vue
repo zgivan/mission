@@ -11,13 +11,13 @@
 					<text class="iconfont icon-fenxiang_o"></text>
 					<text class="font-small">分享</text>
 				</view>
-				<view class="flex-1 flex flex-column align-center justify-center" @click="collect">
+				<view class="flex-1 flex flex-column align-center justify-center" :class="info.collection === 1 ? 'main-text-color' : ''" @click="collect">
 					<text class="iconfont icon-shoucangxiao"></text>
 					<text class="font-small">收藏</text>
 				</view>
 			</view>
-			<view class="flex flex-1 align-center justify-center font-sm main-bg-color text-white" @click="getMission">领取任务</view>
-			<navigator class="flex flex-1 align-center justify-center font-sm sec-bg-color text-white" url="/pages/mission/add-patient/add-patient">推荐患者</navigator>
+			<view class="flex flex-1 align-center justify-center font-sm main-bg-color text-white" @click="getMission" v-if="info.is_join === 0">领取任务</view>
+			<navigator class="flex flex-1 align-center justify-center font-sm sec-bg-color text-white" url="/pages/mission/add-patient/add-patient" v-else>推荐患者</navigator>
 		</view>
 	</view>
 </template>

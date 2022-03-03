@@ -10,12 +10,11 @@ import store from './store/index.js'
 import commonFixedLine from './components/use-components/common-fixed-line.vue'
 Vue.component('common-fixed-line',commonFixedLine)
 
-
 Vue.config.productionTip = false
 App.mpType = 'app'
 
 Vue.prototype.$store = store
-
+Vue.prototype.$eventHub = new Vue();
 const app = new Vue({
 	store,
   ...App

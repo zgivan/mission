@@ -17,7 +17,7 @@ export default {
 			}
 		},
 		// 登录
-		login(state,userinfo,auth){
+		login(state,userinfo){
 			state.userinfo = userinfo
 			state.userid = userinfo.id
 			state.loginStatus = true

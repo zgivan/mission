@@ -159,43 +159,11 @@
 				console.log('popupclosed');
 			},
 			onchange(e) {},
-			checkIdCard(){
-				$H.post('/com/isidcar',{
-					idcar: this.info.idcard
-				}).then(res => {
-					return res.code
-				})
-			},
 			getCity(){
 				// 获取城市信息
 				$H.post('/com/get_region').then(res => {
 					if(res.code === 1){
-						let cc = []
-						let obj = {}
-						res.data.list.map((item) => {
-							obj = item
-							obj['text'] = item['name']
-							obj['value'] = item['id']
-							delete obj['name']
-							delete obj['id']
-							this.$nextTick(function(){
-								let obj1 = {}
-								let arr = []
-								item.children.map((ch) => {
-									obj1 = ch
-									obj1['text'] = ch['name']
-									obj1['value'] = ch['id']
-									delete obj1['name']
-									delete obj1['id']
-									arr.push(obj1)
-								})
-								obj['children'] = arr
-							})
-							cc.push(obj)
-							
-							console.log(cc)
-						})
-						this.citys = cc
+						this.citys = res.data.list
 					}else{
 						uni.showToast({
 							msg: res.msg,

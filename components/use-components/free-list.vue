@@ -16,8 +16,8 @@
 					<text class="text-muted">积分：</text><text class="text-warning">{{item.integral}}</text>
 				</view>
 				<view class="font-sm text-white" v-if="type === 0 || type === 4">
-					<navigator class="d-inline-block px-2 py-1 sec-bg-color rounded" url="/pages/mission/patient-manage/patient-manage">推荐患者</navigator>
-					<view class="d-inline-block px-2 py-1 main-bg-color rounded">领取任务</view>
+					<navigator class="d-inline-block px-2 py-1 sec-bg-color rounded" url="/pages/mission/patient-manage/patient-manage" v-if="item.is_join">推荐患者</navigator>
+					<view class="d-inline-block px-2 py-1 main-bg-color rounded" v-else @click.stop="join">领取任务</view>
 				</view>
 			</view>
 		</view>
@@ -109,6 +109,9 @@
 			},
 			changeTab(index){
 				this.currSub = index;
+			},
+			join(){
+				this.$emit('join',this.item.key)
 			}
 		}
 	}
