@@ -98,9 +98,6 @@
 				currSub: 0
 			};
 		},
-		mounted(){
-			console.log(this.item)
-		},
 		methods:{
 			toDetail(){
 				if(this.type === 0){
