@@ -15,8 +15,8 @@
 				<uni-forms-item label="年龄" required name="age">
 					<uni-easyinput type="number" v-model="info.age" placeholder="请输入年龄" />
 				</uni-forms-item>
-				<uni-forms-item label="联系电话" required name="phone">
-					<uni-easyinput type="number" v-model="info.phone" placeholder="请输入联系电话" />
+				<uni-forms-item label="联系电话" required name="mobile">
+					<uni-easyinput type="number" v-model="info.mobile" placeholder="请输入联系电话" />
 				</uni-forms-item>
 				<uni-forms-item label="身高" name="height">
 					<uni-easyinput type="number" v-model="info.height" placeholder="请输入身高(cm)" />
@@ -29,20 +29,25 @@
 				</uni-forms-item>
 				<template v-if="!isBase">
 					<uni-forms-item label="所在城市" required :name="!isBase?'city':''">
-						<uni-data-picker placeholder="请选择所在地区" popup-title="请选择所在地区" :localdata="citys" v-model="info.city"
-							@change="onchange" @nodeclick="onnodeclick" @popupopened="onpopupopened" @popupclosed="onpopupclosed">
+						<uni-data-picker placeholder="请选择所在地区" popup-title="请选择所在地区" :localdata="citys" v-model="info.city" @nodeclick="onnodeclick">
 						</uni-data-picker>
 					</uni-forms-item>
-					<uni-forms-item label="备注" name="introduction">
-						<uni-easyinput type="textarea" v-model="info.introduction" placeholder="请输入备注" />
+					<uni-forms-item label="备注" name="remarks">
+						<uni-easyinput type="textarea" v-model="info.remarks" placeholder="请输入备注" />
 					</uni-forms-item>
 					<view class="example-body">
-						<uni-file-picker limit="50" title="最多选择50张图片"></uni-file-picker>
+						<uni-file-picker :limit="maxCount" :title="'最多选择'+maxCount+'张图片'" v-model="imgValue" file-mediatype="image" @select="select"></uni-file-picker>
 					</view>
 				</template>
 			</uni-forms>
-			<view class="p-3">
-				<view class="main-bg-color text-white font flex align-center justify-center rounded-circle" style="height: 80rpx;" @click="submit('valiForm')">提交</view>
+			<view class="p-3 flex align-center" @click="choice">
+				<choice-icon @click="choice" :selected="selected"></choice-icon> <text class="ml-2 font-sm text-danger">病例信息已获得患者知情同意</text>
+			</view>
+			<common-fixed-line :h="120"></common-fixed-line>
+			<view class="bg-white position-fixed fixed-bottom" style="height: 120rpx;">
+				<view class="p-3">
+					<view class="main-bg-color text-white font flex align-center justify-center rounded-circle" style="height: 80rpx;" @click="submit('valiForm')">提交</view>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -50,9 +55,14 @@
 
 <script>
 	import $H from '@/common/lib/request.js'
+	import upload from '@/common/mixins/upload.js'
+	import choiceIcon from '@/components/use-components/choice-icon.vue'
 	export default {
+		mixins: [upload],
 		data() {
 			return {
+				selected: false,
+				imgValue: [],
 				isBase: false,
 				citys: [],
 				info: {
@@ -100,7 +110,7 @@
 							errorMessage: '年龄只能输入数字'
 						}]
 					},
-					phone: {
+					mobile: {
 						rules: [{
 							required: true,
 							errorMessage: '联系电话不能为空'
@@ -114,32 +124,43 @@
 							required: true,
 							errorMessage: '请选择城市'
 						}]
-					}
+					},
+					imageCount: 50
 				},
 				info: {
 					fullname: '',
 					age: '',
-					introduction: '',
+					remarks: '',
 					idnumber: '',
 					sex: '',
-					phone:'',
+					mobile:'',
 					height: '',
 					weight: '',
-					symptom: '高血压',
+					symptom: 0,
+					province: '',
 					city: '',
+					album: '',
+					task_id: 0
 				}
 			}
 		},
-		mounted() {
-			this.getCity()
-		},
 		methods: {
+			select(res){
+				this.uploadFile(res.tempFilePaths)
+			},
+			choice(){
+				this.selected = !this.selected
+			},
 			submit(ref) {
-				console.log(this.$refs[ref])
-				this.$refs[ref].validate().then(res => {
-					console.log('success', this.valiFormData);
-					uni.showToast({
-						title: `校验通过`
+				// console.log(this.$refs[ref])
+				this.$refs[ref].validate().then(result => {
+					// 验证成功插入数据
+					$H.post('/patient/add',this.info,{
+						header:{
+							Authorization: uni.getStorageSync('auth')
+						}
+					}).then(res => {
+						console.log(res)
 					})
 				}).catch(err => {
 					console.log('err', err);
@@ -151,14 +172,14 @@
 			},
 			onnodeclick(e) {
 				console.log(e);
+				if(e.level === 0){
+					this.info.province = e.id
+					this.info.city = ''
+				}
+				if(e.level === 1){
+					this.info.city = e.id
+				}
 			},
-			onpopupopened(e) {
-				console.log('popupopened');
-			},
-			onpopupclosed(e) {
-				console.log('popupclosed');
-			},
-			onchange(e) {},
 			getCity(){
 				// 获取城市信息
 				$H.post('/com/get_region').then(res => {
@@ -174,6 +195,11 @@
 			},
 		},
 		components: {
+			choiceIcon
+		},
+		onLoad(opt) {
+			// 这里接收项目ID和症状id
+			this.getCity()
 		}
 	}
 </script>

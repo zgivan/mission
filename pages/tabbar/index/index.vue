@@ -1,5 +1,5 @@
 <template>
-	<view class="page">
+	<view class="page" enable-flex="true">
 		<mescroll-body ref="mescrollRef" @init="mescrollInit" @down="downCallback" @up="upCallback">
 			<uni-swiper-dot class="uni-swiper-dot-box" @clickItem=clickItem :info="info" :current="current" :mode="mode" :dots-styles="dotsStyles" field="content">
 				<swiper class="swiper-box" @change="change" :current="swiperDotIndex" autoplay circular>
@@ -17,7 +17,7 @@
 				<view class="font-sm flex-1 flex align-center justify-center" @click="toggle()">{{symptom}}</view>
 				<view class="font-sm flex-1 flex align-center justify-center">
 					<uni-data-picker placeholder="所在地区" popup-title="所在地区" :localdata="citys" :border="false" v-model="info.city"
-						@change="onchange" @nodeclick="onnodeclick" @popupopened="onpopupopened" @popupclosed="onpopupclosed">
+						@nodeclick="onnodeclick">
 					</uni-data-picker>
 				</view>
 				<view class="font-sm flex-1 flex align-center justify-center" @click="changeIntegral">佣金</view>
@@ -50,7 +50,6 @@
 	import MescrollMixin from "@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js";
 	
 	import $H from '@/common/lib/request.js'
-	
 	export default {
 		mixins: [MescrollMixin],
 		components: {
@@ -92,7 +91,8 @@
 				type: "bottom",
 				citys: [],
 				city: '',
-				integral: ''
+				integral: '',
+				keyword: ''
 			}
 		},
 		onLoad() {
@@ -155,17 +155,10 @@
 					}
 				}
 			},
-			onpopupopened(e) {
-				console.log('popupopened');
-			},
-			onpopupclosed(e) {
-				
-			},
 			changeIntegral(){
 				this.integral = this.integral === 'DESC' ? 'ASC' : 'DESC'
 				this.refreshLists()
 			},
-			onchange(e) {},
 			getCity(){
 				// 获取城市信息
 				$H.post('/com/get_region').then(res => {
@@ -197,7 +190,6 @@
 			},
 			clickItem(e) {
 				this.swiperDotIndex = e
-				console.log(e)
 			},
 			toggle() {
 				// open 方法传入参数 等同在 uni-popup 组件上绑定 type属性
@@ -217,7 +209,6 @@
 			getSymptom(){
 				// 获取疾病类型列表
 				$H.post('/com/get_disease').then(res => {
-					console.log(res)
 					if(res.code === 1){
 						var obj = {}
 						obj.id = ''
@@ -251,7 +242,7 @@
 					symptom: this.symId,
 					page: page.num,
 					size: page.size,
-					// keyword: this.keyword,
+					keyword: this.keyword,
 					integral: this.integral
 				},{
 					header: {
@@ -261,9 +252,7 @@
 					uni.hideLoading()
 					if(res.code === 1){
 						this.mescroll.endSuccess(res.data.list.length);  
-						console.log(page.num)
 						if(page.num === 1){
-							console.log(res)
 							this.mList = res.data.list
 						}else{
 							this.mList = this.mList.concat(res.data.list)

@@ -5,7 +5,7 @@
 				<view class="flex align-center justify-center align-stretch border-top border-bottom border-light-secondary" style="height: 70rpx;">
 					<view class="font-sm flex align-center">
 						<uni-data-picker placeholder="选择所在地区" popup-title="选择所在地区" :localdata="citys" v-model="city"
-							@change="onchange" @nodeclick="onnodeclick" @popupopened="onpopupopened" @popupclosed="onpopupclosed">
+							@nodeclick="onnodeclick" @popupclosed="onpopupclosed">
 						</uni-data-picker>
 					</view>
 					<!-- <text class="iconfont ml-2 icon-xiajiantou flex align-center"></text> -->
@@ -16,7 +16,7 @@
 		
 		<view v-if="type === 'city'">
 			<uni-collapse ref="collapse" v-model="value" @change="change">
-				<uni-collapse-item :title="city.name" v-for="(city,idx) in list" :key="idx">
+				<uni-collapse-item :title="city.name" v-for="(city,idx) in list" :key="idx" v-if="city.children">
 					<view class="content">
 						<block v-for="(item,index) in city.children" :key="index">
 							<free-mult-item :item="item" :index="index" :idx="idx" @toggle="toggle"></free-mult-item>
@@ -24,6 +24,11 @@
 					</view>
 				</uni-collapse-item>
 			</uni-collapse>
+			<block v-for="(item,index) in list" :key="index" v-if="!item.children">
+				<view class="bg-white">
+					<free-mult-item :item="item" :index="index" :idx="index" @toggle="toggle"></free-mult-item>
+				</view>
+			</block>
 		</view>
 		
 		<view class="bg-white" v-else>
@@ -61,24 +66,30 @@
 		methods: {
 			getHosp(){
 				//获取医院信息
-				console.log(this.city)
+				uni.showLoading({
+					title: '加载中...',
+					mask: true
+				})
 				$H.post('/com/hospital',{
 					keyword: this.keyword,
 					city: this.city,
 					is_all: 0,
 					page: this.page
 				}).then(res => {
+					uni.hideLoading()
 					console.log(res)
 					if(res.code === 1){
-						let ret = res.data
-						this.$nextTick(function(){
-							ret.map(v=>{
-								if(this.cids.indexOf(v.id) > -1){
-									v.checked = true
-								}
-							})
-							this.list = ret
+						this.list = res.data
+						this.list.map(v=>{
+							console.log('check:'+this.cids.indexOf(v.id))
+							if(this.cids.indexOf(parseInt(v.id)) > -1){
+								v.checked = true
+							}else{
+								v.checked =false
+							}
 						})
+						console.log(this.list)
+						this.$forceUpdate()
 					}else{
 						uni.showToast({
 							msg: res.msg,
@@ -95,12 +106,15 @@
 						let ret = res.data.list
 						this.$nextTick(function(){
 							ret.map(v=>{
-								if(this.cids.indexOf(v.id.toString()) > -1){
+								if(this.cids.indexOf(v.id) > -1){
 									v.checked = true
+								}else{
+									v.checked = false
 								}
 							})
 							console.log(ret)
 							this.list = ret
+							this.$forceUpdate()
 						})
 					}else{
 						uni.showToast({
@@ -118,12 +132,15 @@
 						let ret = res.data.list
 						this.$nextTick(function(){
 							ret.map(v=>{
-								if(this.cids.indexOf(v.id.toString()) > -1){
+								if(this.cids.indexOf(v.id) > -1){
 									v.checked = true
+								}else{
+									v.checked = false
 								}
 							})
 							console.log(ret)
 							this.list = ret
+							this.$forceUpdate()
 						})
 					}else{
 						uni.showToast({
@@ -140,22 +157,43 @@
 						console.log(res.data.list)
 						let ret = res.data.list
 						// this.$nextTick(function(){
-							for(let i = 0;i<ret.length;i++){
-								for(let j=0;j<ret[i].children.length;j++){
-									if(this.cids.indexOf(ret[i].children[j].id) > -1){
-										ret[i].children[j].checked = true
-									}
-								}
-							}
-							// ret.map(item=>{
-							// 	item.children.map(v=>{
-							// 		if(this.cids.indexOf(v.id.toString()) > -1){
-							// 			v.checked = true
+							// for(let i = 0;i<ret.length;i++){
+							// 	for(let j=0;j<ret[i].children.length;j++){
+							// 		if(this.cids.indexOf(ret[i].children[j].id) > -1){
+							// 			ret[i].children[j].checked = true
 							// 		}
-							// 	})
+							// 	}
+							// }
+							// ret.map(item=>{
+							// 	if(item.children){
+							// 		item.children.map(v=>{
+							// 			if(this.cids.indexOf(v.id.toString()) > -1){
+							// 				console.log('选中的：'+v.name)
+							// 				v.checked = true
+							// 			}else{
+							// 				v.checked = false
+							// 			}
+							// 		})
+							// 	}else{
+							// 		if(this.cids.indexOf(item.id.toString()) > -1){
+							// 			console.log('选中的：'+item.name)
+							// 			item.checked = true
+							// 		}else{
+							// 			item.checked = false
+							// 		}
+							// 	}
+							// })
+							
+							// ret.map(v => {
+							// 	for(let i=0;i<v.children.legnth;i++){
+							// 		if(this.cids.indexOf(v.children[i].id) > -1){
+							// 			v.children[i].checked = true
+							// 		}
+							// 	}
 							// })
 							// console.log(ret)
 							this.list = ret
+							this.$forceUpdate()
 						// })
 					}else{
 						uni.showToast({
@@ -165,37 +203,28 @@
 					}
 				})
 			},
-			toggle(index,idx){
+			toggle(index){
 				var arr = this.list
-				if(this.type === 'city'){  //城市二级
-					let child = arr[idx]
-					let arr1 = child.children
-					let c = arr1[index].checked
-					arr1[index].checked = !c
-					
-					if(!c){
-						this.cids.push(arr1[index].id)
-						this.cnames.push(arr1[index].name)
-					}else{
-						this.cids.splice(this.cids.indexOf(arr1[index].id),1)
-						this.cnames.splice(this.cnames.indexOf(arr1[index].name),1)
-					}
-				}else{
-					let c = arr[index].checked
-					arr[index].checked = !c
-					
-					if(!c){
-						this.cids.push(arr[index].id)
-						this.cnames.push(arr[index].name)
-					}else{
-						this.cids.splice(this.cids.indexOf(arr[index].id),1)
-						this.cnames.splice(this.cnames.indexOf(arr[index].name),1)
-					}
-				}
+				let c = arr[index].checked
+				arr[index].checked = !c
 				this.list = arr
 				this.$forceUpdate()
 			},
 			save(){
+				// console.log(this.cids);
+				// console.log(this.cnames);return;
+				let ids = []
+				let names = []
+				this.cids = this.list.map(v=>{
+					if(v.checked){
+						ids.push(v.id)
+						names.push(v.name)
+					}
+				})
+				
+				this.cids = ids
+				this.cnames = names
+				
 				let data = {
 					cids: this.cids.join(','),
 					cnames: this.cnames.join(',')
@@ -211,18 +240,13 @@
 				this.getHosp()
 			},
 			onnodeclick(e) {
-				// console.log(e);
+				this.city = e.text
 			},
 			onpopupopened(e) {
 				console.log('popupopened');
 			},
 			onpopupclosed(e) {
-				console.log(e);
-				this.city = e.text
-				if(e.level == 1){
-					console.log(e.level)
-					this.getHosp()
-				}
+				this.getHosp()
 			},
 			getCity(){
 				// 获取城市信息
@@ -248,6 +272,8 @@
 			
 			this.cids = option.ids === '' ? [] : option.ids.split(',')
 			this.cnames = option.names === '' ? [] : option.names.split(',')
+			
+			this.cids = this.cids.map(v => {return parseInt(v)})
 			console.log(this.cids)
 			console.log(this.cnames)
 			if(this.type === 'hospital'){
@@ -272,6 +298,13 @@
 					title: '选择服务城市'
 				})
 			}
+		},
+		onUnload() {
+			let data = {
+				cids: this.cids.join(','),
+				cnames: this.cnames.join(',')
+			}
+			this.$eventHub.$emit('setIds',data);
 		}
 	}
 </script>

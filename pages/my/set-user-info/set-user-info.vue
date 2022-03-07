@@ -35,13 +35,14 @@
 			</view>
 			<view class="sec-text-color mt-4 px-3 font-sm"><text class="main-text-color">*</text>为必填项，完善个人信息才能领取任务</view>
 			<view class="p-3">
-				<view class="w-100 flex align-center justify-center main-bg-color text-white button-circle">保存</view>
+				<view class="w-100 flex align-center justify-center main-bg-color text-white button-circle" @click="save">保存</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import $H from '@/common/lib/request.js'
 	export default {
 		data() {
 			return {
@@ -53,15 +54,7 @@
 					text: '女',
 					value: 1
 				}],
-				info:{
-					company: '广州子公司',
-					fullname: '张三',
-					sex: 0,
-					service_city:'',   // 服务城市
-					disease:'',				 // 感兴趣疾病类型
-					department: '',    // 科室
-					hospital: ''		   // 医院
-				},
+				info:{},
 				diseaseName: '请选择疾病类型',
 				departName: '请选择服务科室',
 				hospitalName: '请选择工作医院',
@@ -107,25 +100,80 @@
 					ids = this.info.service_city
 					names = this.scityName === '请选择服务城市' ? '' : this.scityName 
 				}
-				uni.navigateTo({
-					url: '/pages/my/common-mult-select/common-mult-select?type='+type+'&ids='+ids+'&names='+names,
-				});
+				
+				if(this.type === 'city'){
+					uni.navigateTo({
+						url: '/pages/my/common-mult-select/common-mult-city?ids='+ids+'&names='+names,
+					});
+				}else{
+					uni.navigateTo({
+						url: '/pages/my/common-mult-select/common-mult-select?type='+type+'&ids='+ids+'&names='+names,
+					});
+				}
+			},
+			getUser(){
+				$H.post('/member/getinfo',{},{
+					header:{
+						Authorization: uni.getStorageSync('auth')
+					}
+				}).then(res => {
+					if(res.code === 0){
+						let info = res.data
+						let depm = info.department.length === 0 ? '' : info.department.map(v=>{return v.id}).join(',')
+						this.info = {
+							fullname: info.fullname,
+							sex: info.sex,
+							service_city: info.service_city,
+							disease: info.disease,
+							department: depm,
+							hospital: info.hospital
+						}
+						this.departName = info.department.length === 0 ? '' : info.department.map(v=>{return v.name}).join(',')
+						this.hospitalName = info.hospital_var.length === 0  ? '' : info.hospital_var.map(v=>{return v.name}).join(',')
+						this.diseaseName = info.disease_var.length === 0 ? '' : info.disease_var.map(v=>{return v.name}).join(',')
+					}
+				})
+			},
+			save(){
+				uni.showLoading({
+					title: '保存中...',
+					mask: true
+				})
+				$H.post('/member/editmemberfield',this.info,{
+					header:{
+						Authorization: uni.getStorageSync('auth')
+					}
+				}).then(res=>{
+					if(res.code === 1){
+						uni.showToast({
+							title: res.msg
+						})
+					}else{
+						uni.showToast({
+							title: res.msg,
+							icon: 'none'
+						})
+					}
+				})
 			}
 		},
 		onShow() {
 			if(this.type === 'hospital'){
 				this.info.hospital = this.tempids
-				this.hospitalName = this.tempnames
+				this.hospitalName = this.tempids == '' ? '请选择工作医院' : this.tempnames
 			}else if(this.type === 'depart'){
 				this.info.department = this.tempids
-				this.departName = this.tempnames
+				this.departName =  this.tempids == '' ? '请选择服务科室' : this.tempnames
 			}else if(this.type === 'symptom'){
 				this.info.disease = this.tempids
-				this.diseaseName = this.tempnames
+				this.diseaseName =  this.tempids == '' ? '请选择疾病类型' : this.tempnames
 			}else if(this.type === 'city'){
 				this.info.service_city = this.tempids
-				this.scityName = this.tempnames
+				this.scityName =  this.tempids == '' ? '请选择服务城市' : this.tempnames
 			}
+		},
+		onLoad() {
+			this.getUser()
 		}
 	}
 </script>

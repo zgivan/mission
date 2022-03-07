@@ -24,7 +24,7 @@
 				<uni-list-item show-extra-icon showArrow extra-icon="icon-gerenxinxi1" title="团队患者" to="/pages/my/team-patient/team-patient" />
 				<uni-list-item show-extra-icon showArrow extra-icon="icon-gerenzhongxin-gerenxinxi" title="我的患者" to="/pages/my/my-patient/my-patient"/>
 				<uni-list-item show-extra-icon showArrow extra-icon="icon-jifen" title="我的积分" to="/pages/my/my-integral/my-integral"/>
-				<uni-list-item show-extra-icon showArrow extra-icon="icon-shoucangxiao" title="我的收藏" to="/pages/my/my-collected/my-collected"/>
+				<!-- <uni-list-item show-extra-icon showArrow extra-icon="icon-shoucangxiao" title="我的收藏" to="/pages/my/my-collected/my-collected"/> -->
 			</uni-list>
 		</uni-section>
 	</view>
