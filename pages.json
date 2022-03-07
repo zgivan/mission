@@ -105,6 +105,13 @@
 			}
 
 		}, {
+			"path": "pages/my/common-mult-select/common-mult-city",
+			"style": {
+				"navigationBarTitleText": "选择服务城市",
+				"enablePullDownRefresh": false
+			}
+
+		},{
 			"path": "pages/news/news-detail/news-detail",
 			"style": {
 				"navigationBarTitleText": "",
