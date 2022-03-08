@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "邀请",
-  "enablePullDownRefresh": false,
-  "usingComponents": {
-    "uni-section": "/components/uni-section/uni-section"
-  }
-}

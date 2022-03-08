@@ -1,9 +1,0 @@
-{
-  "navigationBarTitleText": "工作",
-  "enablePullDownRefresh": false,
-  "usingComponents": {
-    "free-search-select": "/components/use-components/free-search-select",
-    "free-list": "/components/use-components/free-list",
-    "free-patient-item": "/components/use-components/free-patient-item"
-  }
-}

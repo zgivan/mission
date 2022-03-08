@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "任务详情",
-  "enablePullDownRefresh": false,
-  "usingComponents": {
-    "free-list": "/components/use-components/free-list"
-  }
-}

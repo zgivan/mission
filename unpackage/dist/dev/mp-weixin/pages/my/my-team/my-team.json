@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "团队成员",
-  "enablePullDownRefresh": false,
-  "usingComponents": {
-    "free-tab": "/components/use-components/free-tab",
-    "free-member-item": "/components/use-components/free-member-item"
-  }
-}
