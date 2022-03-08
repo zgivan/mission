@@ -5,8 +5,8 @@
 			<view class="px-3">
 				<view class="border-bottom border-light-secondary flex align-center" style="height: 96rpx;">
 					<text class="font-sm common-text-light common-pr" style="width: 152rpx;">所属公司</text>
-					<view class="flex-1 mr-1"><uni-easyinput disabled placeholder="" v-model="info.company"/></view>
-					<view class="d-inline-block py-1 px-2 font-small main-bg-color text-white">变更</view>
+					<view class="flex-1 mr-1"><uni-easyinput disabled placeholder="" v-model="company"/></view>
+					<view class="d-inline-block py-1 px-2 font-small main-bg-color text-white" v-if="is_edit == 1">变更</view>
 				</view>
 				<view class="border-bottom border-light-secondary flex align-center" style="height: 96rpx;">
 					<text class="font-sm common-text-light common-pr" style="width: 152rpx;">姓名<text class="red-star">*</text></text>
@@ -38,6 +38,16 @@
 				<view class="w-100 flex align-center justify-center main-bg-color text-white button-circle" @click="save">保存</view>
 			</view>
 		</view>
+		
+		<view class="position-fixed w-100 h-100 top-0 left-0" style="background-color: rgba(0,0,0,0.5);">
+			<view class="position-absolute flex flex-column align-center justify-center bg-white rounded" style="width: 560rpx;height: 360rpx;top: 50%;left: 50%;margin-top: -180rpx;margin-left: -280rpx;">
+				<view class="font-md common-text-dark">公司变更</view>
+				<view class="font common-text-dark" style="margin-top: 36rpx;">
+					<uni-easyinput  v-model="code" type="text" placeholder="请输入公司邀请码" />
+				</view>
+				<view class="main-bg-color flex align-center justify-center text-white" style="margin-top: 80rpx;width: 228rpx;height: 80rpx;border-radius: 40rpx;">确定</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -61,7 +71,10 @@
 				scityName: '请选择服务城市',
 				type: '',
 				tempids: '',
-				tempnames: ''
+				tempnames: '',
+				company:'',
+				is_edit: 1,
+				code: ''
 			}
 		},
 		methods: {
@@ -105,6 +118,10 @@
 					uni.navigateTo({
 						url: '/pages/my/common-mult-select/common-mult-city?ids='+ids+'&names='+names,
 					});
+				}else if(this.type === 'hospital'){
+					uni.navigateTo({
+						url: '/pages/my/common-mult-select/common-mult-hospital?ids='+ids+'&names='+names,
+					});
 				}else{
 					uni.navigateTo({
 						url: '/pages/my/common-mult-select/common-mult-select?type='+type+'&ids='+ids+'&names='+names,
@@ -131,10 +148,14 @@
 						this.departName = info.department.length === 0 ? '' : info.department.map(v=>{return v.name}).join(',')
 						this.hospitalName = info.hospital_var.length === 0  ? '' : info.hospital_var.map(v=>{return v.name}).join(',')
 						this.diseaseName = info.disease_var.length === 0 ? '' : info.disease_var.map(v=>{return v.name}).join(',')
+						this.scityName = info.service_city_var.length === 0 ? '' : info.service_city_var.map(v=>{return v.name}).join(',')
+						this.company = info.company_name
+						this.is_edit = info.is_edit
 					}
 				})
 			},
 			save(){
+				// 判断必填
 				uni.showLoading({
 					title: '保存中...',
 					mask: true

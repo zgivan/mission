@@ -111,6 +111,13 @@
 				"enablePullDownRefresh": false
 			}
 
+		}, {
+			"path": "pages/my/common-mult-select/common-mult-hospital",
+			"style": {
+				"navigationBarTitleText": "选择工作医院",
+				"enablePullDownRefresh": false
+			}
+
 		},{
 			"path": "pages/news/news-detail/news-detail",
 			"style": {

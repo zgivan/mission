@@ -30,11 +30,25 @@ export default {
 					url: 'http://api.hzcg.com.cn/api/images/upload',
 					filePath: paths[i],
 					name: 'uploadfile',
+					header:{
+						Authorization: uni.getStorageSync('auth')
+					},
 					success: (ret) => {
 						if(i === paths.length-1){
 							uni.hideLoading()
 						}
-						console.log(ret)
+						if(ret.statusCode === 200){
+							let res = JSON.parse(ret.data)
+							if(res.code === 1){
+								this.imgCount++ 
+								this.resultImgs.push(res.data) 
+							}else{
+								uni.showToast({
+									title: res.msg,
+									icon: 'none'
+								})
+							}
+						}
 					},
 					fail: (err) => {
 						uni.hideLoading()

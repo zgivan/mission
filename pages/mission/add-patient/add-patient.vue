@@ -25,7 +25,7 @@
 					<uni-easyinput type="number" v-model="info.weight" placeholder="请输入体重(kg)" />
 				</uni-forms-item>
 				<uni-forms-item label="确诊症状" name="symptom">
-					<uni-easyinput disabled v-model="info.symptom" placeholder="请输入确诊症状" />
+					<uni-easyinput disabled v-model="symptomName" placeholder="请输入确诊症状" />
 				</uni-forms-item>
 				<template v-if="!isBase">
 					<uni-forms-item label="所在城市" required :name="!isBase?'city':''">
@@ -36,7 +36,7 @@
 						<uni-easyinput type="textarea" v-model="info.remarks" placeholder="请输入备注" />
 					</uni-forms-item>
 					<view class="example-body">
-						<uni-file-picker :limit="maxCount" :title="'最多选择'+maxCount+'张图片'" v-model="imgValue" file-mediatype="image" @select="select"></uni-file-picker>
+						<uni-file-picker :limit="maxCount" :title="'最多选择'+maxCount+'张图片'" file-mediatype="image" @select="select"></uni-file-picker>
 					</view>
 				</template>
 			</uni-forms>
@@ -62,7 +62,6 @@
 		data() {
 			return {
 				selected: false,
-				imgValue: [],
 				isBase: false,
 				citys: [],
 				info: {
@@ -141,7 +140,8 @@
 					city: '',
 					album: '',
 					task_id: 0
-				}
+				},
+				symptomName: '有意愿参加任意临床项目'
 			}
 		},
 		methods: {
@@ -152,15 +152,38 @@
 				this.selected = !this.selected
 			},
 			submit(ref) {
+				this.info.album = JSON.stringify(this.resultImgs)
+				
 				// console.log(this.$refs[ref])
 				this.$refs[ref].validate().then(result => {
 					// 验证成功插入数据
+					if(!this.selected){
+						uni.showToast({
+							title: '需勾选患者知情同意',
+							icon: 'none'
+						})
+						return
+					}
 					$H.post('/patient/add',this.info,{
 						header:{
 							Authorization: uni.getStorageSync('auth')
 						}
 					}).then(res => {
-						console.log(res)
+						if(res.code === 1){
+							uni.showToast({
+								title:res.msg
+							})
+							setTimeout(() =>{
+								uni.navigateBack({
+									delta: -1
+								})
+							},500)
+						}else{
+							uni.showToast({
+								title:res.msg,
+								icon: 'none'
+							})
+						}
 					})
 				}).catch(err => {
 					console.log('err', err);
@@ -199,6 +222,12 @@
 		},
 		onLoad(opt) {
 			// 这里接收项目ID和症状id
+			if(opt.id){
+				this.info.task_id = opt.id
+				this.info.symptom = opt.sym
+				this.symptomName = opt.symName
+			}
+			
 			this.getCity()
 		}
 	}
