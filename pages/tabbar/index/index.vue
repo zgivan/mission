@@ -95,7 +95,10 @@
 				keyword: ''
 			}
 		},
-		onLoad() {
+		onLoad(opt) {
+			if(opt.pid){
+				uni.setStorageSync('pid',opt.pid)
+			}
 			this.getSymptom()
 			this.getCity()
 		},
@@ -273,7 +276,13 @@
 					url: '/pages/mission/mission-detail/mission-detail?id='+id
 				});
 			}
-		}
+		},
+		onShareAppMessage() {
+			return {
+				title: '邀请你加入百科迈招募',
+				path: '/pages/tabBar/index/index?pid='+uni.getStorageSync('uid')
+			}
+		},
 	}
 </script>
 

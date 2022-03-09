@@ -1,7 +1,7 @@
 export default {
 	// 全局配置
 	common: {
-		baseUrl: 'http://api.hzcg.com.cn/api',
+		baseUrl: 'https://api.bioclmedia.com/api',
 		header: {
 			'Content-Type':'application/json;charset=UTF-8',
 			'Content-Type':'application/x-www-form-urlencoded'
@@ -29,6 +29,7 @@ export default {
 				...options,
 				success: result => {
 					// 服务端失败
+					console.log(result)
 					if(result.statusCode !== 200){
 						uni.showToast({
 							title: result.data.msg || '服务端失败',

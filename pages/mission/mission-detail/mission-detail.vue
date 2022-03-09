@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<free-list :type="2" :item="info"></free-list>
-		<view class="flex align-center position-fixed fixed-bottom align-stretch bg-white" style="height: 70rpx;">
+		<view class="flex align-stretch position-fixed fixed-bottom align-stretch bg-white" style="height: 80rpx;">
 			<view class="flex align-center flex-1 text-dark">
 				<view class="flex-1 flex flex-column align-center justify-center">
 					<text class="iconfont icon-kefu"></text>
@@ -17,7 +17,7 @@
 				</view>
 			</view>
 			<view class="flex flex-1 align-center justify-center font-sm main-bg-color text-white" @click="getMission" v-if="info.is_join === 0">领取任务</view>
-			<navigator class="flex flex-1 align-center justify-center font-sm sec-bg-color text-white" url="/pages/mission/add-patient/add-patient" v-else>推荐患者</navigator>
+			<navigator class="flex flex-1 align-center justify-center font-sm sec-bg-color text-white" :url="'/pages/mission/add-patient/add-patient?id='+info.id+'&sym='+info.symptom+'&symName='+info.symptom_name" v-else>推荐患者</navigator>
 		</view>
 	</view>
 </template>

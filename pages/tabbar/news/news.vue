@@ -103,11 +103,17 @@
 			freeLoadMore,
 			meTabs
 		},
-		onLoad: function(option){
-			if(option.pid){
-				uni.setStorageSync('pid',option.pid)
+		onLoad(opt){
+			if(opt.pid){
+				uni.setStorageSync('pid',opt.pid)
 			}
 			this.getCate()
+		},
+		onShareAppMessage() {
+			return {
+				title: '邀请你加入百科迈招募',
+				path: '/pages/tabbar/news/news?pid='+uni.getStorageSync('uid')
+			}
 		}
 	}
 </script>

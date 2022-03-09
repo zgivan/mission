@@ -46,19 +46,14 @@
 				loginStatus: state => state.login.loginStatus
 			})
 		},
-		onLoad:function(){
+		onLoad(opt){
+			if(opt.pid){
+				uni.setStorageSync('pid',opt.pid)
+			}
 			this.initUser()
-			// console.log(this.userinfo)
-			// console.log(parseInt(8,11))
 		},
 		methods: {
 			...mapMutations(['login','initUser']),
-			onClick(p){
-				console.log(p)
-			// 	uni.navigateTo({
-			// 		url: '/page/my/'+p+'/'+p,
-			// 	});
-			},
 			toEditInfo(){
 				uni.navigateTo({
 					url: '/pages/my/set-user-info/set-user-info'
@@ -85,7 +80,8 @@
 						encryptedData: encryptedData,
 						iv: iv,
 						openid: result.data.openid,
-						sessionKey: result.data.session_key
+						sessionKey: result.data.session_key,
+						pid: uni.getStorageSync('pid')
 					}).then(ret => {
 						console.log(ret)
 						if(ret.code === 1){
@@ -107,7 +103,6 @@
 					},
 				}).then(result => {
 					if(result.code === 1){
-						console.log('login-auth:'+auth)
 						uni.setStorageSync('auth',auth)
 						this.login(result.data)
 					}else{
@@ -126,6 +121,12 @@
 						this.code = res.code
 					})
 				})
+			}
+		},
+		onShareAppMessage() {
+			return {
+				title: '邀请你加入百科迈招募',
+				path: '/pages/tabBar/my/my?pid='+uni.getStorageSync('uid')
 			}
 		}
 	}

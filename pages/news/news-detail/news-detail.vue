@@ -47,9 +47,11 @@
 				})
 			}
 		},
-		onLoad:function(option){
+		onLoad(opt){
+			if(opt.pid){
+				uni.setStorageSync('pid',opt.pid)
+			}
 			this.id = option.id
-			console.log(this.id)
 			uni.setNavigationBarTitle({
 				title: option.name
 			})

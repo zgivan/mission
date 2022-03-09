@@ -27,18 +27,16 @@
 				<uni-forms-item label="确诊症状" name="symptom">
 					<uni-easyinput disabled v-model="symptomName" placeholder="请输入确诊症状" />
 				</uni-forms-item>
-				<template v-if="!isBase">
-					<uni-forms-item label="所在城市" required :name="!isBase?'city':''">
-						<uni-data-picker placeholder="请选择所在地区" popup-title="请选择所在地区" :localdata="citys" v-model="info.city" @nodeclick="onnodeclick">
-						</uni-data-picker>
-					</uni-forms-item>
-					<uni-forms-item label="备注" name="remarks">
-						<uni-easyinput type="textarea" v-model="info.remarks" placeholder="请输入备注" />
-					</uni-forms-item>
-					<view class="example-body">
-						<uni-file-picker :limit="maxCount" :title="'最多选择'+maxCount+'张图片'" file-mediatype="image" @select="select"></uni-file-picker>
-					</view>
-				</template>
+				<uni-forms-item label="所在城市" required :name="!isBase?'city':''">
+					<uni-data-picker placeholder="请选择所在地区" popup-title="请选择所在地区" :localdata="citys" v-model="info.city" @nodeclick="onnodeclick">
+					</uni-data-picker>
+				</uni-forms-item>
+				<uni-forms-item label="备注" name="remarks">
+					<uni-easyinput type="textarea" v-model="info.remarks" placeholder="请输入备注" />
+				</uni-forms-item>
+				<view class="example-body">
+					<uni-file-picker :limit="maxCount" :title="'最多选择'+maxCount+'张图片'" file-mediatype="image" @select="select"></uni-file-picker>
+				</view>
 			</uni-forms>
 			<view class="p-3 flex align-center" @click="choice">
 				<choice-icon @click="choice" :selected="selected"></choice-icon> <text class="ml-2 font-sm text-danger">病例信息已获得患者知情同意</text>
@@ -141,7 +139,7 @@
 					album: '',
 					task_id: 0
 				},
-				symptomName: '有意愿参加任意临床项目'
+				symptomName: '有意愿参加任意临床项目',
 			}
 		},
 		methods: {
@@ -223,6 +221,7 @@
 		onLoad(opt) {
 			// 这里接收项目ID和症状id
 			if(opt.id){
+				console.log(opt)
 				this.info.task_id = opt.id
 				this.info.symptom = opt.sym
 				this.symptomName = opt.symName

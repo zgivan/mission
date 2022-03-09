@@ -10,7 +10,7 @@
 			<free-patient-item :item="item"></free-patient-item>
 		</view>
 		<common-fixed-line h="70"></common-fixed-line>
-		<view class="position-fixed fixed-bottom bg-white flex align-center align-stretch font" style="height: 70rpx;">
+		<view class="position-fixed fixed-bottom bg-white flex align-center align-stretch font" style="height: 80rpx;">
 			<view class="main-bg-color text-white flex-1 flex align-center justify-center">添加患者资料</view>
 			<view class="flex-1 text-muted flex align-center justify-center">关闭任务</view>
 		</view>

@@ -117,6 +117,17 @@
 		},
 		onShow() {
 			this.getCollected()
+		},
+		onLoad(opt){
+			if(opt.pid){
+				uni.setStorageSync('pid',opt.pid)
+			}
+		},
+		onShareAppMessage() {
+			return {
+				title: '邀请你加入百科迈招募',
+				path: '/pages/tabbar/work/work?pid='+uni.getStorageSync('uid')
+			}
 		}
 	}
 </script>
