@@ -41,7 +41,7 @@
 				</view>
 			</view>
 			<view class="flex align-center justify-center pt-4 pb-3">
-				<navigator class="main-bg-color text-white font-sm py-1 px-2 rounded" url="/pages/mission/patient-manage/patient-manage">管理患者名单</navigator>
+				<navigator class="main-bg-color text-white font-sm py-1 px-2 rounded" :url="'/pages/mission/patient-manage/patient-manage?id='+item.task_id">管理患者名单</navigator>
 			</view>
 		</view>
 		<view v-if="type===2">
@@ -100,8 +100,8 @@
 		},
 		methods:{
 			toDetail(){
-				if(this.type === 0){
-					this.$emit('detail',this.item.key)
+				if(this.type === 0 || this.type === 1 || this.type === 4){
+					this.$emit('detail',this.item.key||this.item.task_id)
 				}
 			},
 			changeTab(index){

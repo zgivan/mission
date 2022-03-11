@@ -16,7 +16,7 @@
 					<text class="font-small">收藏</text>
 				</view>
 			</view>
-			<view class="flex flex-1 align-center justify-center font-sm main-bg-color text-white" @click="getMission" v-if="info.is_join === 0">领取任务</view>
+			<view class="flex flex-1 align-center justify-center font-sm main-bg-color text-white" @click="getMission" v-if="info.is_join == 0">领取任务</view>
 			<navigator class="flex flex-1 align-center justify-center font-sm sec-bg-color text-white" :url="'/pages/mission/add-patient/add-patient?id='+info.id+'&sym='+info.symptom+'&symName='+info.symptom_name" v-else>推荐患者</navigator>
 		</view>
 	</view>
@@ -85,6 +85,10 @@
 				})
 			},
 			collect(){
+				uni.showLoading({
+					title:'操作中...',
+					mask: true
+				})
 				$H.post('/task/collection',{
 					task_id: this.info.id
 				},{
@@ -92,14 +96,15 @@
 						Authorization: uni.getStorageSync('auth'),
 					},
 				}).then(res => {
+					uni.hideLoading()
 					if(res.code === 1){
 						uni.showToast({
-							msg: res.msg
+							title: res.msg
 						})
 						this.getDetail()
 					}else{
 						uni.showToast({
-							msg: res.msg,
+							title: res.msg,
 							icon: 'none'
 						})
 					}

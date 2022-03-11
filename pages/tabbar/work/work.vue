@@ -1,11 +1,11 @@
 <template>
 	<view class="page">
-		<free-search-select :selectList="secList" :hasSelect="true" :currTab="currTab" @changeT="changeTab" :hasSearch="hasSearch"></free-search-select>
+		<free-search-select :selectList="secList" :hasSelect="true" :currTab="currTab" @changeT="changeTab" :hasSearch="hasSearch" @search="search"></free-search-select>
 		
 		<mescroll-body ref="mescrollRef" @init="mescrollInit" @down="downCallback" @up="upCallback">
 			<view class="mt-2 bg-white" v-if="currTab < 3">
 				<block v-for="(item,index) in list" :key="index">
-					<free-list :type="type" :item="item"></free-list>
+					<free-list :type="type" :item="item" @detail="toDetail" @join="showJoin"></free-list>
 				</block>
 			</view>
 			
@@ -20,9 +20,10 @@
 	import freeSearchSelect from '@/components/use-components/free-search-select.vue'
 	import freePatientItem from '@/components/use-components/free-patient-item.vue'
 	import freeList from '@/components/use-components/free-list.vue'
-	
+	import MescrollMixin from "@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js";
 	import $H from '@/common/lib/request.js'
 	export default {
+		mixins: [MescrollMixin],
 		data() {
 			return {
 				currTab: 1,
@@ -67,7 +68,7 @@
 					}
 				],
 				list: [],
-				page: 1
+				keyword:''
 			}
 		},
 		methods: {
@@ -78,38 +79,103 @@
 				}else{
 					if(index === 0){
 						this.type = 4
-						this.getCollected()
 					}else if(index === 2){
 						this.type = 1
 					}
 					this.hasSearch = false
 				}
 				this.currTab = index
+				this.refreshLists()
 			},
 			toManage(){
 				uni.navigateTo({
 					url: '/pages/mission/patient-manage/patient-manage'
 				});
 			},
-			getCollected(){
+			search(e){
+				// 关键字搜索
+				console.log(e)
+				this.keyword = e.value
+				this.refreshLists()
+			},
+			upCallback(page){
+				this.getList(page)
+			},
+			refreshLists(){
+				this.list = []
+				this.mescroll.resetUpScroll()
+			},
+			getList(page){
+				if(this.currTab === 0){
+					this.getCollected(page)
+				}else if(this.currTab === 1){
+					this.getMyWork(page)
+				}
+			},
+			getCollected(page){
+				uni.showLoading({
+					title: '加载中...',
+					mask: true
+				})
 				// 获取收藏列表
 				$H.post('/task/mycollection',{
-					city: '',
-					symptom: this.symId
+					page: page.num
 				},{
 					header:{
 						Authorization: uni.getStorageSync('auth'),
 					},
 				}).then(res => {
+					console.log(res)
+					uni.hideLoading()
 					if(res.code === 1){
-						this.list = res.data.list
+						this.mescroll.endSuccess(res.data.list.length)
+						if(page.num === 1){
+							this.list = res.data.list
+						}else{
+							this.list = this.list.concat(res.data.list)
+						}
 					}else{
-						uni.showToast({
-							msg: res.msg,
-							icon: 'none'
-						})
+						if(page.num === 1){
+							this.list = []
+							this.mescroll.endSuccess(0)
+						}
 					}
 				})
+			},
+			getMyWork(page){
+				uni.showLoading({
+					title: '加载中...',
+					mask: true
+				})
+				// 获取任务列表
+				$H.post('/task/mytask',{
+					page: page.num,
+					keyword: this.keyword
+				},{
+					header:{
+						Authorization: uni.getStorageSync('auth'),
+					},
+				}).then(res => {
+					uni.hideLoading()
+					if(res.code === 1){
+						this.mescroll.endSuccess(res.data.list.length)
+						if(page.num === 1){
+							this.list = res.data.list
+						}else{
+							this.list = this.list.concat(res.data.list)
+						}
+					}else{
+						if(page.num === 1){
+							this.list = []
+							this.mescroll.endSuccess(0)
+						}
+					}
+				})
+			},
+			toDetail(id){
+				uni.navigateTo({
+					url: '/pages/mission/mission-detail/mission-detail?id='+id
+				});
 			}
 		},
 		components:{
@@ -118,7 +184,8 @@
 			freePatientItem
 		},
 		onShow() {
-			this.getCollected()
+			console.log(uni.getStorageSync('auth'))
+			this.refreshLists()
 		},
 		onLoad(opt){
 			if(opt.pid){

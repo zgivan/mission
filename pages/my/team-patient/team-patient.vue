@@ -6,11 +6,12 @@
 			</template>
 		</free-search-select>
 		
-		<!-- 病患列表 -->
-		<view v-for="(item,index) in patients" :key="index">
-			<free-patient-item :item="item"></free-patient-item>
-		</view>
-		
+		<mescroll-body ref="mescrollRef" @init="mescrollInit" @down="downCallback" @up="upCallback">
+			<!-- 病患列表 -->
+			<view v-for="(item,index) in patients" :key="index">
+				<free-patient-item :item="item"></free-patient-item>
+			</view>
+		</mescroll-body>
 		<!-- 带数据列表单选底部弹层 -->
 		<uni-popup ref="popup" background-color="#fff">
 			<view class="popup-content" :class="{ 'popup-height': type === 'left' || type === 'right' }">				
@@ -25,7 +26,10 @@
 	import freeSingleSelect from '@/components/use-components/free-single-select.vue'
 	import freePatientItem from '@/components/use-components/free-patient-item.vue'
 	import freePopupTab from '@/components/use-components/free-popup-tab.vue'
+	import MescrollMixin from "@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js";
+	import $H from '@/common/lib/request.js'
 	export default {
+		mixins: [MescrollMixin],
 		data() {
 			return {
 				yymm: '月份',
@@ -67,31 +71,87 @@
 					}
 				],
 				type: 'bottom',
-				patients:[
-					{
-						name: '张三',
-						sex:'男',
-						age: 20,
-						projectName: '测试项目名',
-						createTime: '2022-01-13 09:41:50',
-						status: '筛选失败',
-						remark: '无意愿参加试验'
-					},
-					{
-						name: '张三',
-						sex:'男',
-						age: 20,
-						projectName: '测试项目名',
-						createTime: '2022-01-13 09:41:50',
-						status: '筛选失败',						
-						remark: '无意愿参加试验'
-					}
-				]
+				patients:[]
 			}
 		},
 		methods: {
 			changeTab(index){
 				this.tCurr = index;
+				this.refreshLists()
+			},
+			refreshLists(){
+				this.patients = []
+				this.mescroll.resetUpScroll()
+			},
+			upCallback(page){
+				this.getList(page)
+			},
+			getList(page){
+				if(this.tCurr === 0){
+					this.getMyTeamPatient(page)
+				}else{
+					this.getMyTeamOrPatient(page)
+				}
+			},
+			getMyTeamPatient(page){
+				uni.showLoading({
+					title: '加载中...',
+					mask: true
+				})
+				// 获取我的直属代理
+				$H.post('/member/my-team-patient',{
+					page: page.num,
+					size: page.size
+				},{
+					header:{
+						Authorization: uni.getStorageSync('auth'),
+					},
+				}).then(res => {
+					uni.hideLoading()
+					if(res.code === 1){
+						this.mescroll.endSuccess(res.data.list.length)
+						if(page.num === 1){
+							this.patients = res.data.list
+						}else{
+							this.patients = this.list.concat(res.data.list)
+						}
+					}else{
+						if(page.num === 1){
+							this.patients = []
+							this.mescroll.endSuccess(0)
+						}
+					}
+				})
+			},
+			getMyTeamOrPatient(page){
+				uni.showLoading({
+					title: '加载中...',
+					mask: true
+				})
+				// 获取我的直属代理
+				$H.post('/member/my-team-or-patient',{
+					page: page.num,
+					size: page.size
+				},{
+					header:{
+						Authorization: uni.getStorageSync('auth'),
+					},
+				}).then(res => {
+					uni.hideLoading()
+					if(res.code === 1){
+						this.mescroll.endSuccess(res.data.list.length)
+						if(page.num === 1){
+							this.patients = res.data.list
+						}else{
+							this.patients = this.list.concat(res.data.list)
+						}
+					}else{
+						if(page.num === 1){
+							this.patients = []
+							this.mescroll.endSuccess(0)
+						}
+					}
+				})
 			},
 			bindChange(e){
 				var val = e.target.value
