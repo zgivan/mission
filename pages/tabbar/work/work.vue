@@ -2,15 +2,17 @@
 	<view class="page">
 		<free-search-select :selectList="secList" :hasSelect="true" :currTab="currTab" @changeT="changeTab" :hasSearch="hasSearch"></free-search-select>
 		
-		<view class="mt-2 bg-white" v-if="currTab < 3">
-			<block v-for="(item,index) in list" :key="index">
-				<free-list :type="type" :item="item"></free-list>
-			</block>
-		</view>
-		
-		<view v-for="(item,index) in patients" :key="index" v-else>
-			<free-patient-item :item="item"></free-patient-item>
-		</view>
+		<mescroll-body ref="mescrollRef" @init="mescrollInit" @down="downCallback" @up="upCallback">
+			<view class="mt-2 bg-white" v-if="currTab < 3">
+				<block v-for="(item,index) in list" :key="index">
+					<free-list :type="type" :item="item"></free-list>
+				</block>
+			</view>
+			
+			<view v-for="(item,index) in patients" :key="index" v-else>
+				<free-patient-item :item="item"></free-patient-item>
+			</view>
+		</mescroll-body>
 	</view>
 </template>
 

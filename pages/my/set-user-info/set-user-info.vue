@@ -18,19 +18,19 @@
 				</view>
 				<view class="border-bottom border-light-secondary flex align-center justify-between py-1" style="min-height: 96rpx;box-sizing: border-box;">
 					<text class="font-sm common-text-light common-pr" style="width: 152rpx;">服务城市<text class="red-star">*</text></text>
-					<view @click="toSelect('city')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end">{{scityName}}</view>
+					<view @click="toSelect('city')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end">{{scityName == '' ? '请选择服务城市':scityName}}</view>
 				</view>
 				<view class="border-bottom border-light-secondary flex align-center justify-between py-1" style="min-height: 96rpx;box-sizing: border-box;">
 					<text class="font-sm common-text-light common-pr" style="width: 152rpx;">感兴趣疾病类型<text class="red-star">*</text></text>
-					<view @click="toSelect('symptom')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end">{{diseaseName}}</view>
+					<view @click="toSelect('symptom')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end">{{diseaseName == '' ? '请选择感兴趣疾病类型':diseaseName}}</view>
 				</view>
 				<view class="border-bottom border-light-secondary flex align-center justify-between py-1" style="min-height: 96rpx;box-sizing: border-box;">
 					<text class="font-sm common-text-light common-pr" style="width: 152rpx;">服务科室<text class="red-star">*</text></text>
-					<view @click="toSelect('depart')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end">{{departName}}</view>
+					<view @click="toSelect('depart')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end">{{departName == '' ? '请选择服务科室':departName}}</view>
 				</view>
 				<view class="border-bottom border-light-secondary flex align-center justify-between py-1" style="min-height: 96rpx;box-sizing: border-box;">
 					<text class="font-sm common-text-light common-pr" style="width: 152rpx;">工作医院<text class="red-star">*</text></text>
-					<view @click="toSelect('hospital')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end">{{hospitalName}}</view>
+					<view @click="toSelect('hospital')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end">{{hospitalName == '' ? '请选择工作医院':hospitalName}}</view>
 				</view>
 			</view>
 			<view class="sec-text-color mt-4 px-3 font-sm"><text class="main-text-color">*</text>为必填项，完善个人信息才能领取任务</view>
@@ -141,6 +141,7 @@
 						Authorization: uni.getStorageSync('auth')
 					}
 				}).then(res => {
+					console.log(res)
 					uni.hideLoading()
 					if(res.code === 0){
 						let info = res.data
@@ -243,6 +244,7 @@
 			}
 		},
 		onShow() {
+			console.log(this.tempids,this.tempnames)
 			if(this.type === 'hospital'){
 				this.info.hospital = this.tempids
 				this.hospitalName = this.tempids == '' ? '请选择工作医院' : this.tempnames
