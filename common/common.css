@@ -17,16 +17,20 @@ view,text{
 .scroll-row{ width: 100%;white-space: nowrap;overflow-x: auto; }
 .scroll-row-item{ display: inline-block; }
 
+.content-bg-color{
+	background-color: #f5f6f7;
+}
+
 /* 设置主色调字体背景边框等  16c140 */
 .main-bg-color{
 	/* background-color: #dc2609; */
-	background-color: #5ed879;
+	background-color: #0ad161;
 }
 .main-border-color{
-	border-color: #5ed879;
+	border-color: #0ad161;
 }
 .main-text-color{
-	color: #5ed879;
+	color: #0ad161;
 }
 .sec-bg-color{
 	background-color: #ff5000;

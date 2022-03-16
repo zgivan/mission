@@ -3,7 +3,7 @@
 		<free-search-select :selectList="secList" :hasSelect="true" :currTab="currTab" @changeT="changeTab" :hasSearch="hasSearch" @search="search"></free-search-select>
 		
 		<mescroll-body ref="mescrollRef" @init="mescrollInit" @down="downCallback" @up="upCallback">
-			<view class="mt-2 bg-white" v-if="currTab < 3">
+			<view class="mt-2 bg-white" v-if="currTab < 2">
 				<block v-for="(item,index) in list" :key="index">
 					<free-list :type="type" :item="item" @detail="toDetail" @join="showJoin"></free-list>
 				</block>
@@ -110,7 +110,46 @@
 					this.getCollected(page)
 				}else if(this.currTab === 1){
 					this.getMyWork(page)
+				}else if(this.currTab === 2){
+					this.getMyWork(page,0)
+				}else if(this.currTab === 3){
+					this.getPatients(page,4)
 				}
+			},
+			getPatients(page,status){
+				// 获取我的患者列表
+				uni.showLoading({
+					title: '加载中...',
+					mask: true
+				})
+				$H.post('/member/mypatient',{
+					page: page.num,
+					size: page.size,
+					time: '',
+					status: status
+				},{
+					header: {
+						Authorization: uni.getStorageSync('auth')
+					}
+				}).then(res=>{
+					uni.hideLoading()
+					if(res.code === 1){
+						this.mescroll.endSuccess(res.data.list.length)
+						if(page.num === 1){
+							this.patients = res.data.list
+						}else{
+							this.patients = this.patients.concat(res.data.list)
+						}
+					}else{
+						uni.showToast({
+							title: res.msg,
+							icon: 'none'
+						})
+						if(page.num === 1){
+							this.patients = []
+						}
+					}
+				})
 			},
 			getCollected(page){
 				uni.showLoading({

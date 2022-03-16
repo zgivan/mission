@@ -74,7 +74,7 @@
 				let h = 0
 				if(this.isFixed){
 					if(this.hasSearch){
-						h += 104
+						h += 112
 					}
 					if(this.hasTab){
 						h += 70

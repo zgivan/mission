@@ -39,7 +39,7 @@
 		</uni-popup>
 		
 		<!-- 悬浮按钮 -->
-		<navigator url="/pages/mission/add-patient/add-patient" class="position-fixed rounded-circle main-bg-color text-white flex align-center justify-center font-lg" style="width:60rpx;height:60rpx;bottom: 30rpx;right: 30rpx;">＋</navigator>
+		<navigator url="/pages/mission/add-patient/add-patient" class="position-fixed rounded-circle main-bg-color text-white flex align-center justify-center" style="width:60rpx;height:60rpx;bottom: 30rpx;right: 30rpx;"><text class="iconfont icon-icon_zj text-white font-md"></text></navigator>
 		
 	</view>
 </template>

@@ -2,7 +2,7 @@
 	<view>
 		<free-list type="3" :item="info"></free-list>
 		<!-- 患者分类tab -->
-		<view class="mt-2">
+		<view class="mt-1">
 			<free-tab :tList="pType" :curr="pCurr" @click="changeTab"></free-tab>
 		</view>
 		<mescroll-body ref="mescrollRef" @init="mescrollInit" @down="downCallback" @up="upCallback">
@@ -174,13 +174,13 @@
 		computed:{
 			status(){
 				if(this.pCurr === 0){
-					return 1
+					return '1'
 				}else if(this.pCurr === 1){
-					return 0
+					return '0'
 				}else if(this.pCurr === 2){
-					return 4
+					return '4'
 				}else if(this.pCurr === 3){
-					return 5
+					return '5'
 				}
 			}
 		},

@@ -41,11 +41,34 @@
 				this.tCurr = index
 				this.refreshLists()
 			},
+			getCount(){
+				$H.post('/member/agent-num',{},{
+					header:{
+						Authorization: uni.getStorageSync('auth')
+					}
+				}).then(res => {
+					if(res.code === 1){
+						this.typeList = [
+							{
+								text: '直属代理',
+								num: res.data.agent_num
+							}, {
+								text: '非直属代理',
+								num: res.data.or_agent_num
+							}, {
+								text: '直属团队',
+								num: res.data.team_num
+							}
+						]
+					}
+				})
+			},
 			refreshLists(){
 				this.list = []
 				this.mescroll.resetUpScroll()
 			},
 			upCallback(page){
+				this.getCount()
 				this.getList(page)
 			},
 			getList(page){

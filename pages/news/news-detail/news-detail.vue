@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="p-3 bg-white">
-			<view class="common-text-dark font-weight-bold font">{{info.description}}</view>
+			<view class="common-text-dark font-weight-bold font">{{info.title}}</view>
 			<view class="common-text-light font-small mt-1">{{info.create_time}}</view>
 			<view class="common-text-light font-small mt-1">阅读量：{{info.view}}</view>
 		</view>
@@ -14,7 +14,7 @@
 <script>
 	import $H from '@/common/lib/request.js'
 	import $T from '@/common/lib/tool.js'
-	import htmlParser from '@/common/html-parser.js'
+	import htmlParser from '@/common/lib/richText.js'
 	export default {
 		data() {
 			return {
@@ -37,8 +37,7 @@
 						let ni = res.data.info
 						ni.create_time = $T.exchageTime(ni.create_time,1)
 						this.info = ni
-						var htmlString = res.data.info.content.replace(/\\/g, "").replace(/<img/g, "<img style=\"display:none;\"");
-						this.htmlNodes = htmlParser(htmlString);
+						this.htmlNodes = htmlParser.format(res.data.info.content);
 					}else{
 						uni.showToast({
 							title: res.msg
@@ -51,9 +50,9 @@
 			if(opt.pid){
 				uni.setStorageSync('pid',opt.pid)
 			}
-			this.id = option.id
+			this.id = opt.id
 			uni.setNavigationBarTitle({
-				title: option.name
+				title: opt.name
 			})
 			this.getInfo()
 		}

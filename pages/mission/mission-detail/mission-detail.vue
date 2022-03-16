@@ -11,7 +11,7 @@
 					<text class="iconfont icon-fenxiang_o"></text>
 					<text class="font-small">分享</text>
 				</view>
-				<view class="flex-1 flex flex-column align-center justify-center" :class="info.collection === 1 ? 'main-text-color' : ''" @click="collect">
+				<view class="flex-1 flex flex-column align-center justify-center" :class="info.collection == 1 ? 'sec-text-color' : ''" @click="collect">
 					<text class="iconfont icon-shoucangxiao"></text>
 					<text class="font-small">收藏</text>
 				</view>
@@ -49,6 +49,10 @@
 			getDetail(){
 				$H.post('/task/details',{
 					id: this.id
+				},{
+					header: {
+						Authorization: uni.getStorageSync('auth')
+					}
 				}).then(res => {
 					if(res.code === 1){
 						console.log(res)

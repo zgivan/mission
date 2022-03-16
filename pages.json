@@ -137,7 +137,7 @@
 		"borderStyle": "black",
 		"backgroundColor": "#fff",
 		"color": "#000000",
-		"selectedColor": "#5ed879",
+		"selectedColor": "#0ad161",
 		"list": [{
 				"iconPath": "static/tabbar/mission.png",
 				"selectedIconPath": "static/tabbar/mission_on.png",

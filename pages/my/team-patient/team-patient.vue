@@ -33,32 +33,20 @@
 		data() {
 			return {
 				yymm: '月份',
-				status: '状态1',
+				status: '全部',
 				val:[0],
 				list: [{
-					id:1,
-					name: '状态1',
-					num: 0
+					name: '全部'
 				},{
-					id:2,
-					name: '状态2',
-					num: 0
+					name: '正在初筛'
 				},{
-					id:3,
-					name: '状态3',
-					num: 0
+					name: '初筛成功'
 				},{
-					id:4,
-					name: '状态4',
-					num: 0
+					name: '复审通过'
 				},{
-					id:5,
-					name: '状态5',
-					num: 0
+					name: '签署知情成功'
 				},{
-					id:6,
-					name: '状态6',
-					num: 0
+					name: '筛选失败'
 				}],
 				tCurr: 0,
 				typeList: [
@@ -71,7 +59,8 @@
 					}
 				],
 				type: 'bottom',
-				patients:[]
+				patients:[],
+				stype: 0
 			}
 		},
 		methods: {
@@ -101,7 +90,9 @@
 				// 获取我的直属代理
 				$H.post('/member/my-team-patient',{
 					page: page.num,
-					size: page.size
+					size: page.size,
+					time: this.yymm === '月份' ? '' : this.yymm,
+					status: this.stype === 0 ? '' : this.stype-1
 				},{
 					header:{
 						Authorization: uni.getStorageSync('auth'),
@@ -155,7 +146,9 @@
 			},
 			bindChange(e){
 				var val = e.target.value
+				this.stype = val
 				this.status = this.list[val].name
+				this.refreshLists()
 			},
 			comform(){
 				this.visible = false
@@ -163,6 +156,7 @@
 			},
 			changeTime(e){
 				this.yymm = e.target.value
+				this.refreshLists()
 			},
 			toggle(type) {
 				// open 方法传入参数 等同在 uni-popup 组件上绑定 type属性

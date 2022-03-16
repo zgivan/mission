@@ -34,37 +34,28 @@
 		data() {
 			return {
 				yymm: '月份',
-				status: '状态1',
+				status: '全部',
 				val:[0],
-				list: [{
-					id:1,
-					name: '状态1',
-					num: 0
-				},{
-					id:2,
-					name: '状态2',
-					num: 0
-				},{
-					id:3,
-					name: '状态3',
-					num: 0
-				},{
-					id:4,
-					name: '状态4',
-					num: 0
-				},{
-					id:5,
-					name: '状态5',
-					num: 0
-				},{
-					id:6,
-					name: '状态6',
-					num: 0
-				}],
+				list: [
+					{
+						name: '全部'
+					},{
+						name: '正在初筛'
+					},{
+						name: '初筛成功'
+					},{
+						name: '复审通过'
+					},{
+						name: '签署知情成功'
+					},{
+						name: '筛选失败'
+					}
+				],
 				visible: false,
 				type: 'bottom',
 				patients:[],
-				keyword: ''
+				keyword: '',
+				stype: 0
 			}
 		},
 		methods: {
@@ -77,7 +68,9 @@
 			},
 			bindChange(e){
 				var val = e.target.value
+				this.stype = val
 				this.status = this.list[val].name
+				this.refreshLists()
 			},
 			comform(e){
 				this.visible = false
@@ -107,8 +100,8 @@
 				$H.post('/member/mypatient',{
 					page: page.num,
 					size: page.size,
-					time: this.yymm==='月份'?'':this.yymm,
-					keyword: this.keyword
+					time: this.yymm === '月份' ? '' : this.yymm,
+					status: this.stype === 0 ? '' : this.stype - 1
 				},{
 					header: {
 						Authorization: uni.getStorageSync('auth')

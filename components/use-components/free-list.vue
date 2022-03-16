@@ -45,14 +45,8 @@
 			</view>
 		</view>
 		<view v-if="type===2">
-			<view class="pt-3 border-bottom border-light-secondary text-muted" style="line-height: 2;">
-				<!-- <view class="font-sm">试验专业题目：经皮肾动脉交感神经射频消融术（RDN）治疗原发性高血压在中国的临床研究</view>
-				<view class="mt-4 font-sm">
-					<view>报名资料</view>
-					<view>1.病例诊断证明</view>
-					<view>2.用药处方及开药收据</view>
-				</view> -->
-				<rich-text :nodes="item.description"></rich-text>
+			<view class="py-3 border-bottom border-light-secondary text-muted" style="line-height: 2;">
+				<rich-text :nodes="format(item.description)"></rich-text>
 			</view>
 			<veiw class="font-sm flex border-bottom border-light-secondary">
 				<view class="flex-1 text-center text-dark py-2" :class="currSub===0?'main-border-color border-bottom main-text-color':''" @click="changeTab(0)">治疗方案</view>
@@ -61,28 +55,29 @@
 				<view class="flex-1 text-center text-dark py-2" :class="currSub===3?'main-border-color border-bottom main-text-color':''" @click="changeTab(3)">研究中心</view>
 				<view class="flex-1 text-center text-dark py-2" :class="currSub===4?'main-border-color border-bottom main-text-color':''" @click="changeTab(4)">患者权益</view>
 			</veiw>
-			<view class="" v-if="currSub===0">
-				<rich-text :nodes="item.plan"></rich-text>
+			<view class="py-3" v-if="currSub===0">
+				<rich-text :nodes="format(item.plan)"></rich-text>
 			</view>
-			<view class="" v-if="currSub===1">
-				<rich-text :nodes="item.keypoints"></rich-text>
+			<view class="py-3" v-if="currSub===1">
+				<rich-text :nodes="format(item.keypoints)"></rich-text>
 			</view>
-			<view class="" v-if="currSub===2">
-				<rich-text :nodes="item.standard"></rich-text>
+			<view class="py-3" v-if="currSub===2">
+				<rich-text :nodes="format(item.standard)"></rich-text>
 			</view>
-			<view class="" v-if="currSub===3">
+			<view class="py-3" v-if="currSub===3">
 				<block v-for="(obj ,index) in item.research_list" :key="index">
-					<view class="bg-warning mb-2">{{obj.name}}</view>
+					<view class="mb-2 content-bg-color font-sm rounded px-2 py-1 common-text-muted">{{obj.name}}</view>
 				</block>
 			</view>
-			<view class="" v-if="currSub===4">
-				<rich-text :nodes="item.legalright"></rich-text>
+			<view class="py-3" v-if="currSub===4">
+				<rich-text :nodes="format(item.legalright)"></rich-text>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import htmlParser from '@/common/lib/richText.js'
 	export default {
 		props:{
 			item: {
@@ -109,6 +104,9 @@
 			},
 			join(){
 				this.$emit('join',this.item.key)
+			},
+			format(val){
+				return htmlParser.format(val)
 			}
 		}
 	}

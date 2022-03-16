@@ -8,10 +8,10 @@
 			<view class="flex-1 flex align-center" v-if="loginStatus">
 				<view class="flex-1 ml-2 flex align-start font-small flex-column">
 					<view class="text-light-muted">{{userinfo.nickname}} | <text>{{userinfo.mobile ? userinfo.mobile : '未设置电话'}}</text></view>
-					<view class="main-text-color mt-1">所属公司：017广州子公司</view>
-					<view class="text-light-muted mt-1">邀请码：7L63Z3</view>
+					<view class="main-text-color mt-1">所属公司：{{userinfo.company.name}}</view>
+					<view class="text-light-muted mt-1">邀请码：{{userinfo.company.code}}</view>
 				</view>
-				<view class="main-bg-color font-small text-white px-2 py-1" @click="toEditInfo">完善资料</view>
+				<view class="main-bg-color font-small text-white px-2 py-1 rounded" @click="toEditInfo">完善资料</view>
 			</view>
 			<view class="flex-1" v-else>
 				<view class="main-bg-color font-sm text-white px-5 py-1 ml-5 d-inline-block" @click="getUserInfo()">登录</view>
@@ -27,6 +27,22 @@
 				<!-- <uni-list-item show-extra-icon showArrow extra-icon="icon-shoucangxiao" title="我的收藏" to="/pages/my/my-collected/my-collected"/> -->
 			</uni-list>
 		</uni-section>
+		
+		<uni-popup ref="toast" background-color="#fff" @change="" :maskClick="false" hasRadius radius="24rpx">
+			<view class="popup-content">
+				<view class="flex flex-column p-4 align-center" style="width: 560rpx;box-sizing: border-box;">
+					<view class="font-md" :class="Fcolor">提示</view>
+					<view class="text-center font-md common-text-muted mt-4">需要绑定手机号完成注册</view>
+					<view class="mt-4 flex align-center justify-center" style="width:480rpx">
+						<button
+							class="flex-1 main-bg-color common-min-btn text-white flex align-center justify-center "
+							open-type="getPhoneNumber"
+							@getphonenumber="getPhoneNumber"
+						>去绑定</button>
+					</view>
+				</view>
+			</view>
+		</uni-popup>	
 	</view>
 </template>
 
@@ -36,7 +52,8 @@
 	export default {
 		data() {
 			return {
-				code:''
+				code:'',
+				openid: ''
 			}
 		},
 		computed:{
@@ -51,6 +68,8 @@
 				uni.setStorageSync('pid',opt.pid)
 			}
 			this.initUser()
+			this.checkPhone()
+			console.log(this.userinfo)
 		},
 		methods: {
 			...mapMutations(['login','initUser']),
@@ -58,6 +77,39 @@
 				uni.navigateTo({
 					url: '/pages/my/set-user-info/set-user-info'
 				});
+			},
+			checkPhone(){
+				if(this.userinfo.mobile === ''){
+					this.$refs['toast'].open('middle')
+				}
+			},
+			getPhoneNumber(e){
+				console.log(e)
+				if(e.detail.errMsg == 'getPhoneNumber:ok'){
+					let info = {
+						encryptedData: e.detail.encryptedData,
+						iv: e.detail.iv,
+						sessionKey: uni.getStorageSync('session_key'),
+						openid: uni.getStorageSync('openid')
+					}
+					console.log(info)
+					$H.post('/user/get-phone',info,{
+						header:{
+							Authorization: uni.getStorageSync('auth'),
+						}
+					}).then(res => {
+						console.log(res)
+						if(res.code === 1){
+							this.getUser()
+							this.$refs['toast'].close()
+						}else{
+							uni.showToast({
+								title: res.msg,
+								icon: 'none'
+							})
+						}
+					})
+				}
 			},
 			getUserInfo(){
 				// if(this.userid !==0) return
@@ -76,6 +128,8 @@
 					code: this.code
 				}).then(result => {
 					console.log(result);
+					uni.setStorageSync('openid',result.data.openid)
+					uni.setStorageSync('session_key',result.data.session_key)
 					$H.post('/user/wxlogin',{
 						encryptedData: encryptedData,
 						iv: iv,
@@ -85,7 +139,9 @@
 					}).then(ret => {
 						console.log(ret)
 						if(ret.code === 1){
-							this.getUser(ret.data.token_type+' '+ret.data.access_token)
+							let auth = ret.data.token_type+' '+ret.data.access_token
+							uni.setStorageSync('auth',auth)
+							this.getUser()
 						}else{
 							uni.showToast({
 								msg: ret.msg,
@@ -95,19 +151,19 @@
 					}).catch(e =>{})
 				}).catch(e =>{})
 			},
-			getUser(auth){
+			getUser(){
 				// 获取用户信息
 				$H.post('/token/user',{},{
 					header:{
-						Authorization: auth,
+						Authorization: uni.getStorageSync('auth'),
 					},
 				}).then(result => {
 					if(result.code === 1){
-						uni.setStorageSync('auth',auth)
 						this.login(result.data)
+						this.checkPhone()
 					}else{
 						uni.showToast({
-							msg: ret.msg,
+							msg: result.msg,
 							icon: 'none'
 						})
 					}
@@ -126,12 +182,17 @@
 		onShareAppMessage() {
 			return {
 				title: '邀请你加入百科迈招募',
-				path: '/pages/tabBar/my/my?pid='+uni.getStorageSync('uid')
+				path: '/pages/tabbar/my/my?pid='+uni.getStorageSync('uid')
 			}
 		}
 	}
 </script>
 
 <style>
-
+.common-min-btn{
+	width: 240rpx;
+	height: 80rpx;
+	border-radius: 40rpx;
+	font-size: 28rpx;
+}
 </style>

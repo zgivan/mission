@@ -295,7 +295,7 @@
 <style scoped>
 	.uni-data-tree {
 		position: relative;
-		font-size: 14px;
+		font-size: 12px;
 	}
 
 	.error-text {
@@ -309,7 +309,7 @@
 		flex-direction: row;
 		align-items: center;
 		flex-wrap: nowrap;
-		font-size: 14px;
+		font-size: 12px;
 		line-height: 38px;
 		padding: 0 5px;
 		overflow: hidden;
@@ -360,7 +360,7 @@
 	}
 
 	.placeholder {
-		color: grey;
+		color: #333;
 	}
 
 	.input-split-line {
