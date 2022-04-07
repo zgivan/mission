@@ -5,7 +5,7 @@
 			<view class="common-text-light font-small mt-1">{{info.create_time}}</view>
 			<view class="common-text-light font-small mt-1">阅读量：{{info.view}}</view>
 		</view>
-		<view class="p-3">
+		<view class="p-3 richtext">
 			<rich-text :nodes="htmlNodes"></rich-text>
 		</view>
 	</view>
@@ -55,10 +55,18 @@
 				title: opt.name
 			})
 			this.getInfo()
+		},
+		onShareAppMessage() {
+			return {
+				title: '邀请你加入百科迈招募',
+				path: '/pages/news/news-detail/news-detail?id='+this.id+'&pid='+uni.getStorageSync('uid')
+			}
 		}
 	}
 </script>
 
 <style>
-
+	rich-text{
+		max-width: 100%;
+	}
 </style>

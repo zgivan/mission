@@ -42,6 +42,7 @@
 				this.refreshLists()
 			},
 			getDetail(){
+				console.log(this.id)
 				uni.showLoading({
 					title:'加载中...',
 					mask: true
@@ -140,6 +141,7 @@
 				this.mescroll.resetUpScroll()
 			},
 			getPatients(page){
+				this.getPcount()
 				uni.showLoading({
 					title:'操作中...',
 					mask: true
@@ -193,6 +195,12 @@
 			this.id = opt.id
 			this.getDetail()
 			this.getPcount()
+		},
+		onShareAppMessage() {
+			return {
+				title: '邀请你加入百科迈招募',
+				path: '/pages/tabBar/index/index?pid='+uni.getStorageSync('uid')
+			}
 		}
 	}
 </script>

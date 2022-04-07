@@ -29,7 +29,7 @@ export default {
 				...options,
 				success: result => {
 					// 服务端失败
-					console.log(result)
+					// console.log(result)
 					if(result.statusCode !== 200){
 						uni.showToast({
 							title: result.data.msg || '服务端失败',

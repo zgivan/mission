@@ -79,8 +79,10 @@
 				});
 			},
 			checkPhone(){
-				if(this.userinfo.mobile === ''){
-					this.$refs['toast'].open('middle')
+				if(this.loginStatus){
+					if(this.userinfo.mobile === ''){
+						this.$refs['toast'].open('middle')
+					}
 				}
 			},
 			getPhoneNumber(e){

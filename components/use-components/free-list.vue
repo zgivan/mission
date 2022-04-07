@@ -1,6 +1,6 @@
 <template>
 	<view class="py-2 px-3 border-bottom border-light-secondary bg-white" @click="toDetail">
-		<view style="line-height: 2;"><text class="d-inline-block px-2 bg-warning text-white font-sm mr-2" v-if="type === 0">置顶</text><text class="font font-weight-bold">{{item.name}}</text></view>
+		<view style="line-height: 2;"><text class="d-inline-block px-2 bg-warning text-white font-sm mr-2" v-if="type === 0 && item.is_top === 1">置顶</text><text class="font font-weight-bold">{{item.name}}</text></view>
 		<view :class="type === 2?'border-bottom border-top border-light-secondary mt-1 py-3':''">
 			<view class="font-sm mt-1" v-if="type === 2 || type === 3"><text class="text-light-muted">登记编号：</text>{{item.code}}</view>
 			<view class="font-sm mt-1" v-if="type === 2 || type === 3"><text class="text-light-muted">实验分期：</text>{{item.stage}}</view>
@@ -45,8 +45,10 @@
 			</view>
 		</view>
 		<view v-if="type===2">
-			<view class="py-3 border-bottom border-light-secondary text-muted" style="line-height: 2;">
-				<rich-text :nodes="format(item.description)"></rich-text>
+			<view class="py-3 border-bottom border-light-secondary text-muted font-sm" style="line-height: 1.8;">
+				<block v-for="(item,index) in description" :key="index">
+					<view>{{item}}</view>
+				</block>
 			</view>
 			<veiw class="font-sm flex border-bottom border-light-secondary">
 				<view class="flex-1 text-center text-dark py-2" :class="currSub===0?'main-border-color border-bottom main-text-color':''" @click="changeTab(0)">治疗方案</view>
@@ -55,22 +57,33 @@
 				<view class="flex-1 text-center text-dark py-2" :class="currSub===3?'main-border-color border-bottom main-text-color':''" @click="changeTab(3)">研究中心</view>
 				<view class="flex-1 text-center text-dark py-2" :class="currSub===4?'main-border-color border-bottom main-text-color':''" @click="changeTab(4)">患者权益</view>
 			</veiw>
-			<view class="py-3" v-if="currSub===0">
-				<rich-text :nodes="format(item.plan)"></rich-text>
+			<view class="py-3 text-muted font-sm" v-if="currSub===0" style="line-height: 1.8;">
+				<block v-for="(item,index) in plan" :key="index">
+					<view>{{item}}</view>
+				</block>
 			</view>
-			<view class="py-3" v-if="currSub===1">
-				<rich-text :nodes="format(item.keypoints)"></rich-text>
+			<view class="py-3 text-muted font-sm" v-if="currSub===1" style="line-height: 1.8;">
+				<block v-for="(item,index) in keypoints" :key="index">
+					<view>{{item}}</view>
+				</block>
 			</view>
-			<view class="py-3" v-if="currSub===2">
-				<rich-text :nodes="format(item.standard)"></rich-text>
+			<view class="py-3 text-muted font-sm" v-if="currSub===2" style="line-height: 1.8;">
+				<block v-for="(item,index) in standard" :key="index">
+					<view>{{item}}</view>
+				</block>
 			</view>
 			<view class="py-3" v-if="currSub===3">
 				<block v-for="(obj ,index) in item.research_list" :key="index">
-					<view class="mb-2 content-bg-color font-sm rounded px-2 py-1 common-text-muted">{{obj.name}}</view>
+					<view class="mb-2 content-bg-color font-sm rounded px-2 py-1 common-text-muted flex flex-column">
+						<view>{{obj.name}}</view>
+						<view>{{obj.address}}</view>
+					</view>
 				</block>
 			</view>
-			<view class="py-3" v-if="currSub===4">
-				<rich-text :nodes="format(item.legalright)"></rich-text>
+			<view class="py-3 text-muted font-sm" v-if="currSub===4" style="line-height: 1.8;">
+				<block v-for="(item,index) in legalright" :key="index">
+					<view>{{item}}</view>
+				</block>
 			</view>
 		</view>
 	</view>
@@ -108,10 +121,49 @@
 			format(val){
 				return htmlParser.format(val)
 			}
+		},
+		computed:{
+			description(){
+				if(this.item.description){
+					return this.item.description.split('|||')
+				}else{
+					return []
+				}
+			},
+			plan(){
+				if(this.item.plan){
+					return this.item.plan.split('|||')
+				}else{
+					return []
+				}
+			},
+			keypoints(){
+				if(this.item.keypoints){
+					return this.item.keypoints.split('|||')
+				}else{
+					return []
+				}
+			},
+			standard(){
+				if(this.item.standard){
+					return this.item.standard.split('|||')
+				}else{
+					return []
+				}
+			},
+			legalright(){
+				if(this.item.legalright){
+					return this.item.legalright.split('|||')
+				}else{
+					return []
+				}
+			}
 		}
 	}
 </script>
 
 <style>
-
+rich-text{
+	font-size: 24rpx;
+}
 </style>

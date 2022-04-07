@@ -95,7 +95,7 @@
 				this.tempnames = ''
 				let _this = this;
 				this.$eventHub.$on('setIds', function(data) {
-					_this.tempids = data.cids;
+					_this.tempids = data.cids
 					_this.tempnames = data.cnames		
 							//清除监听，不清除会消耗资源
 					_this.$eventHub.$off('setIds');
@@ -194,7 +194,6 @@
 					})
 					return
 				}
-				
 				uni.showLoading({
 					title: '保存中...',
 					mask: true
@@ -209,6 +208,11 @@
 						uni.showToast({
 							title: res.msg
 						})
+						setTimeout(() => {
+							uni.navigateBack({
+								delta:-1
+							})
+						},800)
 					}else{
 						uni.showToast({
 							title: res.msg,
@@ -244,7 +248,6 @@
 			}
 		},
 		onShow() {
-			console.log(this.tempids,this.tempnames)
 			if(this.type === 'hospital'){
 				this.info.hospital = this.tempids
 				this.hospitalName = this.tempids == '' ? '请选择工作医院' : this.tempnames
@@ -261,6 +264,12 @@
 		},
 		onLoad() {
 			this.getUser()
+		},
+		onShareAppMessage() {
+			return {
+				title: '邀请你加入百科迈招募',
+				path: '/pages/tabbar/my/my?pid='+uni.getStorageSync('uid')
+			}
 		}
 	}
 </script>

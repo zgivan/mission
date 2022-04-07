@@ -30,11 +30,11 @@
 				secList: [
 					{
 						text: '已收藏',
-						num: 1
+						num: 0
 					},
 					{
 						text: '招募中',
-						num: 2
+						num: 0
 					},
 					{
 						text: '筛查中',
@@ -94,8 +94,8 @@
 			},
 			search(e){
 				// 关键字搜索
-				console.log(e)
-				this.keyword = e.value
+				// console.log(e)
+				this.keyword = e
 				this.refreshLists()
 			},
 			upCallback(page){
@@ -111,9 +111,9 @@
 				}else if(this.currTab === 1){
 					this.getMyWork(page)
 				}else if(this.currTab === 2){
-					this.getMyWork(page,0)
+					this.getPatients(page,'0')
 				}else if(this.currTab === 3){
-					this.getPatients(page,4)
+					this.getPatients(page,'4')
 				}
 			},
 			getPatients(page,status){
@@ -195,6 +195,7 @@
 						Authorization: uni.getStorageSync('auth'),
 					},
 				}).then(res => {
+					console.log(res)
 					uni.hideLoading()
 					if(res.code === 1){
 						this.mescroll.endSuccess(res.data.list.length)
@@ -215,6 +216,34 @@
 				uni.navigateTo({
 					url: '/pages/mission/mission-detail/mission-detail?id='+id
 				});
+			},
+			getTabs(){
+				$H.post('/task/jobstab-number',{},{
+					header:{
+						Authorization: uni.getStorageSync('auth'),
+					},
+				}).then(res => {
+					if(res.code === 1){
+						this.secList = [
+							{
+								text: '已收藏',
+								num: res.data.collection_num
+							},
+							{
+								text: '招募中',
+								num: res.data.task_num
+							},
+							{
+								text: '筛查中',
+								num: res.data.patient_ing_num
+							},
+							{
+								text: '入组病例',
+								num: res.data.patient_join_num
+							}
+						]
+					}
+				})
 			}
 		},
 		components:{
@@ -224,6 +253,7 @@
 		},
 		onShow() {
 			console.log(uni.getStorageSync('auth'))
+			this.getTabs()
 			this.refreshLists()
 		},
 		onLoad(opt){

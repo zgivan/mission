@@ -111,7 +111,11 @@
 		components: {
 			freeTab
 		},
-		onLoad() {
+		onShareAppMessage() {
+			return {
+				title: '邀请你加入百科迈招募',
+				path: '/pages/tabbar/my/my?pid='+uni.getStorageSync('uid')
+			}
 		}
 	}
 </script>

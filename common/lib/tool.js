@@ -27,5 +27,15 @@ export default {
 		if(type === 5){
 			return (hh>9?hh:'0'+hh) +':'+ (m>9?m:'0'+m)
 		}
+	},
+	countDown(deadline,type){  // 倒计时
+		const now = Math.ceil(new Date().getDate()/1000)
+		const dead = deadline
+		if(dead > now){
+			const t = dead - now
+			return t
+		}else{
+			return '时间已过'
+		}
 	}
 }

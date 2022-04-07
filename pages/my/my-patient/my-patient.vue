@@ -38,24 +38,33 @@
 				val:[0],
 				list: [
 					{
-						name: '全部'
+						name: '全部',
+						id: -1
 					},{
-						name: '正在初筛'
+						name: '缺资料',
+						id: 0
 					},{
-						name: '初筛成功'
+						name: '正在初筛',
+						id: 1
 					},{
-						name: '复审通过'
+						name: '初筛成功',
+						id: 2
 					},{
-						name: '签署知情成功'
+						name: '复审通过',
+						id: 3
 					},{
-						name: '筛选失败'
+						name: '签署知情成功',
+						id: 4
+					},{
+						name: '筛选失败',
+						id: 5
 					}
 				],
 				visible: false,
 				type: 'bottom',
 				patients:[],
 				keyword: '',
-				stype: 0
+				stype: -1   // -1全部 状态0 缺资料1 正在初筛2 初筛成功3 复审通过4 签署知情成功5 筛选失败
 			}
 		},
 		methods: {
@@ -68,7 +77,7 @@
 			},
 			bindChange(e){
 				var val = e.target.value
-				this.stype = val
+				this.stype = this.list[val].id
 				this.status = this.list[val].name
 				this.refreshLists()
 			},
@@ -92,6 +101,7 @@
 				this.getList(page)
 			},
 			getList(page){
+				console.log(this.stype)
 				// 获取我的患者列表
 				uni.showLoading({
 					title: '加载中...',
@@ -101,7 +111,8 @@
 					page: page.num,
 					size: page.size,
 					time: this.yymm === '月份' ? '' : this.yymm,
-					status: this.stype === 0 ? '' : this.stype - 1
+					status: this.stype,
+					keyword: this.keyword
 				},{
 					header: {
 						Authorization: uni.getStorageSync('auth')
@@ -132,6 +143,12 @@
 			freeSingleSelect,
 			freePatientItem,
 			freePopupTab
+		},
+		onShareAppMessage() {
+			return {
+				title: '邀请你加入百科迈招募',
+				path: '/pages/tabbar/my/my?pid='+uni.getStorageSync('uid')
+			}
 		}
 	}
 </script>

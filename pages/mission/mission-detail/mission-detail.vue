@@ -1,16 +1,17 @@
 <template>
 	<view>
 		<free-list :type="2" :item="info"></free-list>
+		<common-fixed-line :h="80"></common-fixed-line>
 		<view class="flex align-stretch position-fixed fixed-bottom align-stretch bg-white" style="height: 80rpx;">
 			<view class="flex align-center flex-1 text-dark">
-				<view class="flex-1 flex flex-column align-center justify-center">
+				<button open-type="contact" class="flex-1 flex flex-column align-center justify-center p-0 m-0 bg-white" style="line-height: 1em;border-color: #fff!important">
 					<text class="iconfont icon-kefu"></text>
 					<text class="font-small">客服</text>
-				</view>
-				<view class="flex-1 flex flex-column align-center justify-center">
+				</button>
+				<button open-type="share" class="flex-1 flex flex-column align-center justify-center p-0 m-0 bg-white" style="line-height: 1em;border-color: #fff!important">
 					<text class="iconfont icon-fenxiang_o"></text>
 					<text class="font-small">分享</text>
-				</view>
+				</button>
 				<view class="flex-1 flex flex-column align-center justify-center" :class="info.collection == 1 ? 'sec-text-color' : ''" @click="collect">
 					<text class="iconfont icon-shoucangxiao"></text>
 					<text class="font-small">收藏</text>
@@ -34,6 +35,9 @@
 			}
 		},
 		onLoad:function(option){
+			if(option.pid){
+				uni.setStorageSync('pid',option.pid)
+			}
 			this.id = option.id
 			console.log(this.id)
 			this.getDetail()
@@ -117,10 +121,18 @@
 		},
 		components:{
 			freeList
+		},
+		onShareAppMessage() {
+			return {
+				title: '邀请你加入百科迈招募',
+				path: '/pages/mission/mission-detail/mission-detail?id='+this.id+'&pid='+uni.getStorageSync('uid')
+			}
 		}
 	}
 </script>
 
 <style>
-
+	button::after{
+		border: none;
+	}
 </style>
