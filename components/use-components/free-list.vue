@@ -41,7 +41,7 @@
 				</view>
 			</view>
 			<view class="flex align-center justify-center pt-4 pb-3">
-				<navigator class="main-bg-color text-white font-sm py-1 px-2 rounded" :url="'/pages/mission/patient-manage/patient-manage?id='+item.task_id">管理患者名单</navigator>
+				<view @click.stop="toManage(item.task_id)" class="main-bg-color text-white font-sm py-1 px-2 rounded">管理患者名单</view>
 			</view>
 		</view>
 		<view v-if="type===2">
@@ -120,6 +120,11 @@
 			},
 			format(val){
 				return htmlParser.format(val)
+			},
+			toManage(id){
+				uni.navigateTo({
+					url: '/pages/mission/patient-manage/patient-manage?id='+id
+				})
 			}
 		},
 		computed:{
