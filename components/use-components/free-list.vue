@@ -74,9 +74,13 @@
 			</view>
 			<view class="py-3" v-if="currSub===3">
 				<block v-for="(obj ,index) in item.research_list" :key="index">
-					<view class="mb-2 content-bg-color font-sm rounded px-2 py-1 common-text-muted flex flex-column">
-						<view>{{obj.name}}</view>
-						<view>{{obj.address}}</view>
+					<view class="flex align-center content-bg-color rounded px-2 py-1 font-sm mb-1">
+						<text class="iconfont icon-wd_icon_wddz mr-1"></text>
+						<view class="common-text-muted flex flex-column flex-1">
+							<view class="common-text-dark">{{obj.name}}</view>
+							<view class="mt-1">{{obj.address}}</view>
+						</view>
+						<view :class="obj.status === 0 ? 'main-text-color' : 'common-text-light'">{{obj.status === 0 ? '开启' :'关闭'}}</view>
 					</view>
 				</block>
 			</view>

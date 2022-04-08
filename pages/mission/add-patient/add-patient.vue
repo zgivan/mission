@@ -214,6 +214,25 @@
 					}
 				})
 			},
+			getInfo(){
+				// 获取已经病人信息
+				uni.showLoading({
+					title: '加载中...',
+					mask: true
+				})
+				$H.post('',{},{
+					header:{
+						Authorization: uni.getStorageSync('auth')
+					}
+				}).then(res => {
+					uni.hideLoading()
+					if(res.code === 1){
+						this.info = res.data
+					}else{
+						this.info = {}
+					}
+				})
+			}
 		},
 		components: {
 			choiceIcon
