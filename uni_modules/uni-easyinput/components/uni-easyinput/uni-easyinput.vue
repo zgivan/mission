@@ -1,5 +1,5 @@
 <template>
-	<view class="uni-easyinput" :class="{'uni-easyinput-error':msg}" :style="{color:inputBorder && msg?'#e43d33':styles.color}">
+	<view class="uni-easyinput" :class="{'uni-easyinput-error':msg}" :style="{color:inputBorder && msg?'#e43d33':styles.color}" @click="fieldClick">
 		<view class="uni-easyinput__content" :class="{'is-input-border':inputBorder ,'is-input-error-border':inputBorder && msg,'is-textarea':type==='textarea','is-disabled':disabled}"
 		 :style="{'border-color':inputBorder && msg?'#dd524d':styles.borderColor,'background-color':disabled?styles.disableColor:''}">
 			<uni-icons v-if="prefixIcon" class="content-clear-icon" :type="prefixIcon" color="#c0c4cc" @click="onClickIcon('prefix')"></uni-icons>
@@ -292,7 +292,9 @@
 				this.$emit('update:modelValue','')
 			},
 			fieldClick() {
-				this.$emit('click');
+				if(this.disabled){
+					this.$emit('click');
+				}
 			},
 			trimStr(str, pos = 'both') {
 				if (pos === 'both') {

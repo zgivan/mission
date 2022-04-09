@@ -28,8 +28,10 @@
 					<uni-easyinput disabled v-model="symptomName" placeholder="请输入确诊症状" />
 				</uni-forms-item>
 				<uni-forms-item label="所在城市" required :name="!isBase?'city':''">
-					<uni-data-picker placeholder="请选择所在地区" popup-title="请选择所在地区" :localdata="citys" v-model="info.city" @nodeclick="onnodeclick">
-					</uni-data-picker>
+					<view class="font-sm" style="float: right;height: 72rpx;line-height: 72rpx;" :style="cityName === '' ? 'color:#ccc;':'color:#333;'" @click="openPopup">{{cityName == ''? '请选择所在地区': cityName}}</view>
+					<!-- <uni-easyinput disabled v-model="cityName" placeholder="请选择所在地区"/> -->
+					<!-- <uni-data-picker placeholder="请选择所在地区" popup-title="请选择所在地区" :localdata="citys" v-model="info.city" @nodeclick="onnodeclick">
+					</uni-data-picker> -->
 				</uni-forms-item>
 				<uni-forms-item label="备注" name="remarks">
 					<uni-easyinput type="textarea" v-model="info.remarks" placeholder="请输入备注" />
@@ -42,12 +44,30 @@
 				<choice-icon @click="choice" :selected="selected"></choice-icon> <text class="ml-2 font-sm text-danger">病例信息已获得患者知情同意</text>
 			</view>
 			<common-fixed-line :h="120"></common-fixed-line>
-			<view class="bg-white position-fixed fixed-bottom" style="height: 120rpx;">
+			<view class="bg-white position-fixed fixed-bottom" style="height: 120rpx; z-index: 1;">
 				<view class="p-3">
 					<view class="main-bg-color text-white font flex align-center justify-center rounded-circle" style="height: 80rpx;" @click="submit('valiForm')">提交</view>
 				</view>
 			</view>
 		</view>
+		
+		<!-- 取消订单原因选择 -->
+		<uni-popup ref="spopup" background-color="#fff" @change="" hasRadius radius="border-top-left-radius: 24rpx;border-top-right-radius: 24rpx;overflow:hidden;">
+			<view class="popup-content">
+				<common-region 
+					:region="citys"
+					:p="info.province"
+					:pName="pName"
+					:c="info.city"
+					:cName="cName"
+					:hasThree="false"
+					@sc="selectC"
+					@sp="selectP"
+					@close="closePopup"
+				></common-region>
+			</view>
+		</uni-popup>
+		
 	</view>
 </template>
 
@@ -55,6 +75,7 @@
 	import $H from '@/common/lib/request.js'
 	import upload from '@/common/mixins/upload.js'
 	import choiceIcon from '@/components/use-components/choice-icon.vue'
+	import commonRegion from '@/components/use-components/common-region.vue'
 	export default {
 		mixins: [upload],
 		data() {
@@ -125,6 +146,7 @@
 					imageCount: 50
 				},
 				info: {
+					id: 0,
 					fullname: '',
 					age: '',
 					remarks: '',
@@ -134,17 +156,45 @@
 					height: '',
 					weight: '',
 					symptom: 0,
-					province: '',
-					city: '',
+					province: 0,
+					city: 0,
 					album: '',
 					task_id: 0
 				},
 				symptomName: '有意愿参加任意临床项目',
+				pName: '请选择',
+				cName: '请选择'
+			}
+		},
+		computed:{
+			cityName(){
+				if(this.pName === '请选择' || this.cName === '请选择'){
+					return ''
+				}else{
+					return this.pName + '-' + this.cName
+				}
 			}
 		},
 		methods: {
 			select(res){
 				this.uploadFile(res.tempFilePaths)
+			},
+			selectP(item){
+				this.info.province = item.id
+				this.pName = item.text
+				this.info.city = 0
+				this.cName = '请选择'
+			},
+			selectC(item){
+				this.info.city = item.id
+				this.cName = item.text
+				this.$refs['spopup'].close()
+			},
+			openPopup(){
+				this.$refs['spopup'].open('bottom')
+			},
+			closePopup(){
+				this.$refs['spopup'].close()
 			},
 			choice(){
 				this.selected = !this.selected
@@ -206,6 +256,9 @@
 				$H.post('/com/get_region').then(res => {
 					if(res.code === 1){
 						this.citys = res.data.list
+						if(this.info.id>0){
+							this.getInfo()
+						}
 					}else{
 						uni.showToast({
 							msg: res.msg,
@@ -220,14 +273,20 @@
 					title: '加载中...',
 					mask: true
 				})
-				$H.post('',{},{
+				$H.post('/patient/patient-info',{
+					id: this.info.id
+				},{
 					header:{
 						Authorization: uni.getStorageSync('auth')
 					}
 				}).then(res => {
+					console.log(res)
 					uni.hideLoading()
 					if(res.code === 1){
 						this.info = res.data
+						this.symptomName = res.data.symptom_val
+						this.pName = res.data.province_val
+						this.cName = res.data.city_val
 					}else{
 						this.info = {}
 					}
@@ -235,18 +294,22 @@
 			}
 		},
 		components: {
-			choiceIcon
+			choiceIcon,
+			commonRegion
 		},
 		onLoad(opt) {
 			// 这里接收项目ID和症状id
+			this.getCity()
 			if(opt.id){
 				console.log(opt)
-				this.info.task_id = opt.id
+				this.info.task_id = parseInt(opt.id)
 				this.info.symptom = opt.sym
 				this.symptomName = opt.symName
 			}
 			
-			this.getCity()
+			if(opt.cid){
+				this.info.id = parseInt(opt.cid)
+			}
 		},
 		onShareAppMessage() {
 			return {
