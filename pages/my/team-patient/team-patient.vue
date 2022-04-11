@@ -52,7 +52,7 @@
 				typeList: [
 					{
 						text: '直属代理患者',
-						num: 1
+						num: 0
 					}, {
 						text: '非直属代理患者',
 						num: 0

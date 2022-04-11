@@ -3,20 +3,21 @@
 		<view class="example bg-white">
 			<!-- 基础表单校验 -->
 			<uni-forms ref="valiForm" :rules="rules" :modelValue="info">
+				<view class="py-1 px-2 font-sm sec-bg-color text-white d-inline-block" v-if="edit === 0">从我的患者中选择</view>
 				<uni-forms-item label="姓名" required name="fullname">
-					<uni-easyinput v-model="info.fullname" placeholder="请输入姓名" />
+					<uni-easyinput :disabled="!canEdit" v-model="info.fullname" placeholder="请输入姓名" />
 				</uni-forms-item>
 				<uni-forms-item label="性别" required name="sex">
-					<uni-data-checkbox v-model="info.sex" :localdata="sexs" />
+					<uni-data-checkbox :disabled="!canEdit" v-model="info.sex" :localdata="sexs" />
 				</uni-forms-item>
 				<uni-forms-item label="身份证" required name="idnumber">
-					<uni-easyinput type="idcard" v-model="info.idnumber" placeholder="请输入身份证" />
+					<uni-easyinput :disabled="!canEdit" type="idcard" v-model="info.idnumber" @blur="getAge" placeholder="请输入身份证" />
 				</uni-forms-item>
 				<uni-forms-item label="年龄" required name="age">
-					<uni-easyinput type="number" v-model="info.age" placeholder="请输入年龄" />
+					<uni-easyinput :disabled="!canEdit" type="number" v-model="info.age" placeholder="请输入年龄" />
 				</uni-forms-item>
 				<uni-forms-item label="联系电话" required name="mobile">
-					<uni-easyinput type="number" v-model="info.mobile" placeholder="请输入联系电话" />
+					<uni-easyinput :disabled="!canEdit" type="number" v-model="info.mobile" placeholder="请输入联系电话" />
 				</uni-forms-item>
 				<uni-forms-item label="身高" name="height">
 					<uni-easyinput type="number" v-model="info.height" placeholder="请输入身高(cm)" />
@@ -28,7 +29,7 @@
 					<uni-easyinput disabled v-model="symptomName" placeholder="请输入确诊症状" />
 				</uni-forms-item>
 				<uni-forms-item label="所在城市" required :name="!isBase?'city':''">
-					<view class="font-sm" style="float: right;height: 72rpx;line-height: 72rpx;" :style="cityName === '' ? 'color:#ccc;':'color:#333;'" @click="openPopup">{{cityName == ''? '请选择所在地区': cityName}}</view>
+					<view class="font-sm" style="float: right;height: 72rpx;line-height: 72rpx;" :style="cityName === '' || edit === 1 ? 'color:#ccc;':'color:#333;'" @click="openPopup">{{cityName == ''? '请选择所在地区': cityName}}</view>
 					<!-- <uni-easyinput disabled v-model="cityName" placeholder="请选择所在地区"/> -->
 					<!-- <uni-data-picker placeholder="请选择所在地区" popup-title="请选择所在地区" :localdata="citys" v-model="info.city" @nodeclick="onnodeclick">
 					</uni-data-picker> -->
@@ -36,8 +37,26 @@
 				<uni-forms-item label="备注" name="remarks">
 					<uni-easyinput type="textarea" v-model="info.remarks" placeholder="请输入备注" />
 				</uni-forms-item>
-				<view class="example-body">
-					<uni-file-picker :limit="maxCount" :title="'最多选择'+maxCount+'张图片'" file-mediatype="image" @select="select"></uni-file-picker>
+				<view class="flex px-3 py-2 align-center justify-between content-bg-color font-sm common-text-light">
+					<text>最多选择{{maxCount}}张图片</text>
+					<text>{{resultImgs.length}}/{{maxCount}}</text>
+				</view>
+				<view class="flex flex-wrap align-center pb-1 px-1 py-2" style="box-sizing: border-box;">
+					<block v-for="(item,index) in resultImgs" :key="index">
+						<view class="px-1 mb-2" style="width: 25%;" @longtap="delImg(index)">
+							<view class="img-bar flex align-center justify-center">
+								<image :src="item" mode="widthFix" class="img-bar-image"></image>
+							</view>
+						</view>
+					</block>
+					<view class="px-1 mb-2" style="width: 25%;" @click="chooseImage" v-if="resultImgs.length < maxCount">
+						<view class="img-bar">
+							<view class="w-100 h-100 content-bg-color flex align-center justify-center flex-column position-absolute top-0 left-0">
+								<text class="iconfont icon-icon_zj common-text-light font-lg"></text>
+								<text class="font-sm common-min-mt common-text-light">添加照片</text>
+							</view>
+						</view>
+					</view>
 				</view>
 			</uni-forms>
 			<view class="p-3 flex align-center" @click="choice">
@@ -73,6 +92,7 @@
 
 <script>
 	import $H from '@/common/lib/request.js'
+	import $T from '@/common/lib/tool.js'
 	import upload from '@/common/mixins/upload.js'
 	import choiceIcon from '@/components/use-components/choice-icon.vue'
 	import commonRegion from '@/components/use-components/common-region.vue'
@@ -80,6 +100,7 @@
 		mixins: [upload],
 		data() {
 			return {
+				edit: 0,
 				selected: false,
 				isBase: false,
 				citys: [],
@@ -173,11 +194,18 @@
 				}else{
 					return this.pName + '-' + this.cName
 				}
+			},
+			canEdit(){
+				if(this.edit === 1){
+					return false
+				}else{
+					return true
+				}
 			}
 		},
 		methods: {
-			select(res){
-				this.uploadFile(res.tempFilePaths)
+			getAge(){
+				this.info.age = $T.getAge(this.info.idnumber)
 			},
 			selectP(item){
 				this.info.province = item.id
@@ -191,6 +219,7 @@
 				this.$refs['spopup'].close()
 			},
 			openPopup(){
+				if(this.edit === 1) return
 				this.$refs['spopup'].open('bottom')
 			},
 			closePopup(){
@@ -202,7 +231,7 @@
 			submit(ref) {
 				this.info.album = JSON.stringify(this.resultImgs)
 				
-				// console.log(this.$refs[ref])
+				console.log(this.info.album)
 				this.$refs[ref].validate().then(result => {
 					// 验证成功插入数据
 					if(!this.selected){
@@ -287,8 +316,21 @@
 						this.symptomName = res.data.symptom_val
 						this.pName = res.data.province_val
 						this.cName = res.data.city_val
+						// this.info.album = JSON.stringify(this.resultImgs)
+						this.resultImgs = this.info.album ? JSON.parse(this.info.album) : []
 					}else{
 						this.info = {}
+					}
+				})
+			},
+			delImg(index){
+				let _this = this
+				uni.showModal({
+					content: '是否移除该图片',
+					cancelText: '取消',
+					confirmText: '确定',
+					success() {
+						_this.resultImgs.splice(index,1)
 					}
 				})
 			}
@@ -309,6 +351,7 @@
 			
 			if(opt.cid){
 				this.info.id = parseInt(opt.cid)
+				this.edit = 1
 			}
 		},
 		onShareAppMessage() {
@@ -321,5 +364,19 @@
 </script>
 
 <style>
-
+.img-bar{
+	width: 100%;
+	height: 0;
+	padding-bottom: 100%;
+	border-radius: 8rpx;
+	overflow: hidden;
+	position: relative;
+}
+.img-bar-image{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
 </style>

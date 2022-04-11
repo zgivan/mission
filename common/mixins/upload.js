@@ -16,6 +16,9 @@ export default {
 				sourceType: ['album','camera'], //从相册或者拍照选择,默认二者都有
 				success: (res) => {
 					console.log(res)
+					if(res.errMsg === 'chooseImage:ok'){
+						this.uploadFile(res.tempFilePaths)
+					}
 				}
 			})
 		},
@@ -27,7 +30,7 @@ export default {
 			})
 			for(let i=0;i<paths.length;i++){
 				uni.uploadFile({
-					url: 'http://api.hzcg.com.cn/api/images/upload',
+					url: 'http://api.bioclmedia.com/api/images/upload',
 					filePath: paths[i],
 					name: 'uploadfile',
 					header:{

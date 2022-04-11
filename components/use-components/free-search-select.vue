@@ -5,7 +5,7 @@
 			</uni-search-bar>
 			<view class="flex align-center px-2" v-if="hasSelect">
 				<block v-for="(item,index) in selectList" :key="index">
-					<view class="font-sm flex-1 text-center flex align-center justify-center" style="height: 70rpx;" :class="currTab===index?'border-bottom main-border-color main-text-color font-weight-bold':''" @click="changeTab(index)">{{item.text}}({{item.num}})</view>
+					<view class="font-sm flex-1 text-center flex align-center justify-center" style="height: 70rpx;" :class="currTab===index?'border-bottom main-border-color main-text-color font-weight-bold':''" @click="changeTab(index)">{{item.text}}{{item.num > 0 ? '('+item.num+')':''}}</view>
 				</block>
 			</view>
 			<!-- 自定义头部选项卡 -->
