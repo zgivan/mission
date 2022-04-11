@@ -46,7 +46,7 @@
 					<input v-model="code" type="text" placeholder="请输入公司邀请码" class="text-center"/>
 				</view>
 				<view class="sec-text-color font-sm">注意:只有一次变更公司的机会</view>
-				<view class="main-bg-color flex align-center justify-center text-white" style="margin-top: 50rpx;width: 228rpx;height: 80rpx;border-radius: 40rpx;" @click="">确定</view>
+				<view class="main-bg-color flex align-center justify-center text-white" style="margin-top: 50rpx;width: 228rpx;height: 80rpx;border-radius: 40rpx;" @click="changeCompany">确定</view>
 			</view>
 		</view>
 	</view>
@@ -238,6 +238,9 @@
 						uni.showToast({
 							title: res.msg
 						})
+						setTimeout(() => {
+							this.getUser()
+						},800)
 					}else{
 						uni.showToast({
 							title: res.msg,
