@@ -3,7 +3,7 @@
 		<view class="example bg-white">
 			<!-- 基础表单校验 -->
 			<uni-forms ref="valiForm" :rules="rules" :modelValue="info">
-				<view class="py-1 px-2 font-sm sec-bg-color text-white d-inline-block" v-if="edit === 0">从我的患者中选择</view>
+				<!-- <view class="py-1 px-2 font-sm sec-bg-color text-white d-inline-block" v-if="edit === 0" @click="toSelect">从我的患者中选择</view> -->
 				<uni-forms-item label="姓名" required name="fullname">
 					<uni-easyinput :disabled="!canEdit" v-model="info.fullname" placeholder="请输入姓名" />
 				</uni-forms-item>
@@ -59,11 +59,11 @@
 					</view>
 				</view>
 			</uni-forms>
-			<view class="p-3 flex align-center" @click="choice">
+			<view class="p-3 flex align-center" @click="choice" v-if="otherEdit">
 				<choice-icon @click="choice" :selected="selected"></choice-icon> <text class="ml-2 font-sm text-danger">病例信息已获得患者知情同意</text>
 			</view>
 			<common-fixed-line :h="120"></common-fixed-line>
-			<view class="bg-white position-fixed fixed-bottom" style="height: 120rpx; z-index: 1;">
+			<view class="bg-white position-fixed fixed-bottom" style="height: 120rpx; z-index: 1;" v-if="otherEdit">
 				<view class="p-3">
 					<view class="main-bg-color text-white font flex align-center justify-center rounded-circle" style="height: 80rpx;" @click="submit('valiForm')">提交</view>
 				</view>
@@ -201,14 +201,27 @@
 				}else{
 					return true
 				}
+			},
+			otherEdit(){
+				if(this.edit === 2){
+					return false
+				}else{
+					return true
+				}
 			}
 		},
 		methods: {
+			toSelect(){
+				//去我的患者页面选择患者
+				uni.navigateTo({
+					url: '/pages/my/select-patient/select-patient'
+				})
+			},
 			getAge(){
 				this.info.age = $T.getAge(this.info.idnumber)
 			},
 			selectP(item){
-				this.info.province = item.id
+				this.info.province = item.id 
 				this.pName = item.text
 				this.info.city = 0
 				this.cName = '请选择'
@@ -219,7 +232,7 @@
 				this.$refs['spopup'].close()
 			},
 			openPopup(){
-				if(this.edit === 1) return
+				if(this.edit === 1 || this.edit === 2) return
 				this.$refs['spopup'].open('bottom')
 			},
 			closePopup(){
@@ -352,6 +365,10 @@
 			if(opt.cid){
 				this.info.id = parseInt(opt.cid)
 				this.edit = 1
+			}
+			
+			if(opt.stype == 1){
+				this.edit = 2
 			}
 		},
 		onShareAppMessage() {

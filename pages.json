@@ -77,6 +77,13 @@
 			}
 
 		}, {
+			"path": "pages/my/select-patient/select-patient",
+			"style": {
+				"navigationBarTitleText": "选择患者",
+				"enablePullDownRefresh": false
+			}
+
+		},{
 			"path": "pages/my/my-collected/my-collected",
 			"style": {
 				"navigationBarTitleText": "我的收藏",

@@ -4,7 +4,7 @@
 		<mescroll-body ref="mescrollRef" @init="mescrollInit" @down="downCallback" @up="upCallback">
 			<view class="mt-1">
 				<block v-for="(item,index) in list" :key="index">
-					<free-member-item :item="item"></free-member-item>
+					<free-member-item :item="item" :stype="tCurr"></free-member-item>
 				</block>
 			</view>
 		</mescroll-body>
@@ -24,14 +24,15 @@
 				typeList: [
 					{
 						text: '直属代理',
-						num: 1
+						num: 0
 					}, {
 						text: '非直属代理',
 						num: 0
-					}, {
-						text: '直属团队',
-						num: 0
 					}
+					// , {
+					// 	text: '直属团队',
+					// 	num: 0
+					// }
 				],
 				list: []
 			}
@@ -55,9 +56,6 @@
 							}, {
 								text: '非直属代理',
 								num: res.data.or_agent_num
-							}, {
-								text: '直属团队',
-								num: res.data.team_num
 							}
 						]
 					}

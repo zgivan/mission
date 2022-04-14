@@ -1,11 +1,11 @@
 <template>
 	<view class="page" enable-flex="true">
 		<mescroll-body ref="mescrollRef" @init="mescrollInit" @down="downCallback" @up="upCallback">
-			<uni-swiper-dot class="uni-swiper-dot-box" @clickItem=clickItem :info="info" :current="current" :mode="mode" :dots-styles="dotsStyles" field="content">
+			<uni-swiper-dot class="uni-swiper-dot-box" @clickItem="clickItem" :info="info" :current="current" :mode="mode" :dots-styles="dotsStyles" field="title">
 				<swiper class="swiper-box" @change="change" :current="swiperDotIndex" autoplay circular>
 					<swiper-item v-for="(item, index) in info" :key="index">
-						<view  class="swiper-item">
-							<image :src="item.url" style="width: 100%;" mode="widthFix"></image>
+						<view  class="swiper-item" @click="toPage(item.url_type,item.aciton_id)">
+							<image :src="item.thumbnail" style="width: 100%;" mode="widthFix"></image>
 						</view>
 					</swiper-item>
 				</swiper>
@@ -24,9 +24,9 @@
 			</view>
 		</view>
 		<!-- 自定义列表组件 -->
-		<view class="mt-2 bg-white">
+		<view class="mt-2">
 			<block v-for="(item,index) in mList" :key="index">
-				<free-list :item="item" @detail="toDetail" @join="showJoin"></free-list>
+				<free-list :item="item" @detail="toDetail" @join="showJoin(item.key,index)"></free-list>
 			</block>
 		</view>
 		
@@ -39,7 +39,7 @@
 		</uni-popup>
 		
 		<!-- 悬浮按钮 -->
-		<navigator url="/pages/mission/add-patient/add-patient" class="position-fixed rounded-circle main-bg-color text-white flex align-center justify-center" style="width:60rpx;height:60rpx;bottom: 30rpx;right: 30rpx;"><text class="iconfont icon-icon_zj text-white font-md"></text></navigator>
+		<view @click="toAdd" class="position-fixed rounded-circle main-bg-color text-white flex align-center justify-center" style="width:60rpx;height:60rpx;bottom: 30rpx;right: 30rpx;"><text class="iconfont icon-icon_zj text-white font-md"></text></view>
 		
 	</view>
 </template>
@@ -64,19 +64,7 @@
 				symId: '',							//当前选中疾病类型ID
 				mList: [],						//任务列表
 				currTab: 0,
-				info: [{
-						url: 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-dc-site/094a9dc0-50c0-11eb-b680-7980c8a877b8.jpg',
-						content: '内容 A'
-					},
-					{
-						url: 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-dc-site/094a9dc0-50c0-11eb-b680-7980c8a877b8.jpg',
-						content: '内容 B'
-					},
-					{
-						url: 'https://vkceyugu.cdn.bspapp.com/VKCEYUGU-dc-site/094a9dc0-50c0-11eb-b680-7980c8a877b8.jpg',
-						content: '内容 C'
-					}
-				],
+				info: [],
 				current: 0,
 				mode: 'nav',
 				dotsStyles: {
@@ -101,6 +89,7 @@
 			}
 			this.getSymptom()
 			this.getCity()
+			this.getBanner()
 		},
 		computed:{
 			skipId(){
@@ -108,7 +97,57 @@
 			}
 		},
 		methods: {
-			showJoin(id){
+			getBanner(){
+				$H.post('/com/imglist',{
+					ident:'indexBanner'
+				}).then(res =>{
+					if(res.code === 1){
+						this.info = res.data.list
+					}
+				})
+			},
+			toPage(type,id){
+				// type 0-资讯 1-任务
+				if(type === 0){
+					uni.navigateTo({
+						url: '/pages/news/news-detail/news-detail?id='+id
+					})
+				}else{
+					uni.navigateTo({
+						url: '/pages/mission/mission-detail/mission-detail?id='+id
+					})
+				}
+			},
+			toAdd(){
+				if(!uni.getStorageSync('auth')){
+					uni.showToast({
+						title: '授权登录后才能进行此操作',
+						icon: 'none'
+					})
+					setTimeout(()=>{
+						uni.switchTab({
+							url: '/pages/tabbar/my/my'
+						})
+					},800)
+					return
+				} 
+				uni.navigateTo({
+					url: '/pages/mission/add-patient/add-patient'
+				})
+			},
+			showJoin(id,index){
+				if(!uni.getStorageSync('auth')){
+					uni.showToast({
+						title: '授权登录后才能进行此操作',
+						icon: 'none'
+					})
+					setTimeout(()=>{
+						uni.switchTab({
+							url: '/pages/tabbar/my/my'
+						})
+					},800)
+					return
+				}
 				// 询问是否领取任务
 				uni.showModal({
 					title: '是否领取该任务？',
@@ -117,12 +156,12 @@
 					success: (res) => {
 						if(res.confirm){
 							//领取任务操作
-							this.joinMission(id)
+							this.joinMission(id,index)
 						}
 					}
 				})
 			},
-			joinMission(id){
+			joinMission(id,index){
 				//领取任务
 				uni.showLoading({
 					title: '提交中'
@@ -139,6 +178,7 @@
 						uni.showToast({
 							title: res.msg
 						})
+						this.mList[index].is_join = 1
 					}else{
 						uni.showToast({
 							title: res.msg,

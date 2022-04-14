@@ -70,6 +70,18 @@
 				})
 			},
 			getMission(){
+				if(!uni.getStorageSync('auth')){
+					uni.showToast({
+						title: '授权登录后才能进行此操作',
+						icon: 'none'
+					})
+					setTimeout(()=>{
+						uni.switchTab({
+							url: '/pages/tabbar/my/my'
+						})
+					},800)
+					return
+				}
 				// 领取任务
 				$H.post('/task/jointask',{
 					task_id: this.info.id
@@ -93,6 +105,18 @@
 				})
 			},
 			collect(){
+				if(!uni.getStorageSync('auth')){
+					uni.showToast({
+						title: '授权登录后才能进行此操作',
+						icon: 'none'
+					})
+					setTimeout(()=>{
+						uni.switchTab({
+							url: '/pages/tabbar/my/my'
+						})
+					},800)
+					return
+				}
 				uni.showLoading({
 					title:'操作中...',
 					mask: true

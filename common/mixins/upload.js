@@ -10,6 +10,7 @@ export default {
 		chooseImage(c=9){  // count- 选择的数量限制，最大为9
 			let canCount = this.imageCount - this.imgCount
 			let count = canCount >= c ? c : canCount    // 判断爱能选择几张图
+			let _this = this
 			uni.chooseImage({
 				count: count,
 				sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
@@ -17,20 +18,20 @@ export default {
 				success: (res) => {
 					console.log(res)
 					if(res.errMsg === 'chooseImage:ok'){
-						this.uploadFile(res.tempFilePaths)
+						_this.uploadFile(res.tempFilePaths)
 					}
 				}
 			})
 		},
 		uploadFile(paths){
-			// const uploadTask = 
+			let _this = this
 			uni.showLoading({
 				title: '图片上传中',
 				mask: true
 			})
 			for(let i=0;i<paths.length;i++){
 				uni.uploadFile({
-					url: 'http://api.bioclmedia.com/api/images/upload',
+					url: 'https://api.bioclmedia.com/api/images/upload',
 					filePath: paths[i],
 					name: 'uploadfile',
 					header:{
@@ -43,8 +44,8 @@ export default {
 						if(ret.statusCode === 200){
 							let res = JSON.parse(ret.data)
 							if(res.code === 1){
-								this.imgCount++ 
-								this.resultImgs.push(res.data) 
+								_this.imgCount++ 
+								_this.resultImgs.push(res.data) 
 							}else{
 								uni.showToast({
 									title: res.msg,

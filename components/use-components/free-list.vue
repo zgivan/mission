@@ -1,6 +1,6 @@
 <template>
-	<view class="py-2 px-3 border-bottom border-light-secondary bg-white" @click="toDetail">
-		<view style="line-height: 2;"><text class="d-inline-block px-2 bg-warning text-white font-sm mr-2" v-if="type === 0 && item.is_top === 1">置顶</text><text class="font font-weight-bold">{{item.name}}</text></view>
+	<view class="py-2 px-3 mb-1 bg-white" @click="toDetail">
+		<view style="line-height: 2;"><text class="d-inline-block px-2 rounded bg-warning text-white font-small mr-2" v-if="type === 0 && item.is_top === 1">置顶</text><text class="font font-weight-bold">{{item.name}}</text></view>
 		<view :class="type === 2?'border-bottom border-top border-light-secondary mt-1 py-3':''">
 			<view class="font-sm mt-1" v-if="type === 2 || type === 3"><text class="text-light-muted">登记编号：</text>{{item.code}}</view>
 			<view class="font-sm mt-1" v-if="type === 2 || type === 3"><text class="text-light-muted">实验分期：</text>{{item.stage}}</view>
@@ -16,7 +16,7 @@
 					<text class="text-muted">积分：</text><text class="text-warning">{{item.integral}}</text>
 				</view>
 				<view class="font-sm text-white" v-if="type === 0 || type === 4">
-					<navigator class="d-inline-block px-2 py-1 sec-bg-color rounded" url="/pages/mission/patient-manage/patient-manage" v-if="item.is_join">推荐患者</navigator>
+					<navigator class="d-inline-block px-2 py-1 sec-bg-color rounded" :url="'/pages/mission/add-patient/add-patient?id='+item.key+'&sym='+item.symptom+'&symName='+item.symptom_name" v-if="item.is_join">推荐患者</navigator>
 					<view class="d-inline-block px-2 py-1 main-bg-color rounded" v-else @click.stop="join">领取任务</view>
 				</view>
 			</view>
@@ -24,19 +24,19 @@
 		<view v-if="type === 1">
 			<view class="border-top border-bottom mt-4 py-3 flex align-center border-light-secondary">
 				<view class="flex flex-column flex-1 align-center">
-					<text class="font-lg font-weight-bold">0</text>
+					<text class="font-lg font-weight-bold">{{item.lack_number}}</text>
 					<text class="font-sm mt-1">缺资料人数</text>
 				</view>
 				<view class="flex flex-column flex-1 align-center">
-					<text class="font-lg font-weight-bold">0</text>
+					<text class="font-lg font-weight-bold">{{item.screen_number}}</text>
 					<text class="font-sm mt-1">筛查人数</text>
 				</view>
 				<view class="flex flex-column flex-1 align-center">
-					<text class="font-lg font-weight-bold">0</text>
+					<text class="font-lg font-weight-bold">{{item.group_number}}</text>
 					<text class="font-sm mt-1">入组人数</text>
 				</view>
 				<view class="flex flex-column flex-1 align-center">
-					<text class="font-lg font-weight-bold">0</text>
+					<text class="font-lg font-weight-bold">{{item.exclude_number}}</text>
 					<text class="font-sm mt-1">排除人数</text>
 				</view>
 			</view>

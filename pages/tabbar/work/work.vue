@@ -3,7 +3,7 @@
 		<free-search-select :selectList="secList" :hasSelect="true" :currTab="currTab" @changeT="changeTab" :hasSearch="hasSearch" @search="search"></free-search-select>
 		
 		<mescroll-body ref="mescrollRef" @init="mescrollInit" @down="downCallback" @up="upCallback">
-			<view class="mt-2 bg-white" v-if="currTab < 2">
+			<view class="mt-1" v-if="currTab < 2">
 				<block v-for="(item,index) in list" :key="index">
 					<free-list :type="type" :item="item" @detail="toDetail" @join="showJoin"></free-list>
 				</block>
@@ -102,6 +102,7 @@
 				this.getList(page)
 			},
 			refreshLists(){
+				this.getTabs()
 				this.list = []
 				this.mescroll.resetUpScroll()
 			},
@@ -111,7 +112,7 @@
 				}else if(this.currTab === 1){
 					this.getMyWork(page)
 				}else if(this.currTab === 2){
-					this.getPatients(page,'0')
+					this.getPatients(page,'99')
 				}else if(this.currTab === 3){
 					this.getPatients(page,'4')
 				}
