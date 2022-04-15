@@ -6,7 +6,7 @@
 		
 		<!-- 病患列表 -->
 		<view v-for="(item,index) in patients" :key="index">
-			<free-patient-item :item="item"></free-patient-item>
+			<free-patient-item :item="item" @back="backPage" isChoice></free-patient-item>
 		</view>
 		</mescroll-body>
 	</view>
@@ -23,35 +23,6 @@
 		mixins: [MescrollMixin],
 		data() {
 			return {
-				yymm: '月份',
-				status: '全部',
-				val:[0],
-				list: [
-					{
-						name: '全部',
-						id: -1
-					},{
-						name: '缺资料',
-						id: 0
-					},{
-						name: '正在初筛',
-						id: 1
-					},{
-						name: '初筛成功',
-						id: 2
-					},{
-						name: '复审通过',
-						id: 3
-					},{
-						name: '签署知情成功',
-						id: 4
-					},{
-						name: '筛选失败',
-						id: 5
-					}
-				],
-				visible: false,
-				type: 'bottom',
 				patients:[],
 				keyword: '',
 				stype: -1   // -1全部 状态0 缺资料1 正在初筛2 初筛成功3 复审通过4 签署知情成功5 筛选失败
@@ -70,10 +41,6 @@
 				this.stype = this.list[val].id
 				this.status = this.list[val].name
 				this.refreshLists()
-			},
-			comform(e){
-				this.visible = false
-				this.$refs.popup.close('bottom')
 			},
 			search(val){
 				this.keyword = val
@@ -100,7 +67,7 @@
 				$H.post('/member/mypatient',{
 					page: page.num,
 					size: page.size,
-					time: this.yymm === '月份' ? '' : this.yymm,
+					time: '',
 					status: this.stype,
 					keyword: this.keyword
 				},{
@@ -126,6 +93,10 @@
 						}
 					}
 				})
+			},
+			backPage(id){
+				this.$eventHub.$emit('setpid',id);
+				uni.navigateBack()
 			}
 		},
 		components: {

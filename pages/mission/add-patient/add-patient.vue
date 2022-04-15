@@ -3,7 +3,9 @@
 		<view class="example bg-white">
 			<!-- 基础表单校验 -->
 			<uni-forms ref="valiForm" :rules="rules" :modelValue="info">
-				<!-- <view class="py-1 px-2 font-sm sec-bg-color text-white d-inline-block" v-if="edit === 0" @click="toSelect">从我的患者中选择</view> -->
+				<view class="p-2 flex align-center justify-end">
+					<view class="py-1 px-2 font-sm sec-bg-color text-white d-inline-block rounded" v-if="edit === 0" @click="toSelect">从我的患者中选择</view>
+				</view>
 				<uni-forms-item label="姓名" required name="fullname">
 					<uni-easyinput :disabled="!canEdit" v-model="info.fullname" placeholder="请输入姓名" />
 				</uni-forms-item>
@@ -184,7 +186,8 @@
 				},
 				symptomName: '有意愿参加任意临床项目',
 				pName: '请选择',
-				cName: '请选择'
+				cName: '请选择',
+				isChoice: false
 			}
 		},
 		computed:{
@@ -212,7 +215,16 @@
 		},
 		methods: {
 			toSelect(){
+				let _this = this
 				//去我的患者页面选择患者
+				this.$eventHub.$on('setpid', function(id) {
+					_this.info.id = id
+					_this.edit = 1
+					_this.isChoice = true
+					_this.getInfo()
+							//清除监听，不清除会消耗资源
+					_this.$eventHub.$off('setpid');
+				});
 				uni.navigateTo({
 					url: '/pages/my/select-patient/select-patient'
 				})
@@ -325,11 +337,30 @@
 					console.log(res)
 					uni.hideLoading()
 					if(res.code === 1){
-						this.info = res.data
-						this.symptomName = res.data.symptom_val
-						this.pName = res.data.province_val
-						this.cName = res.data.city_val
-						// this.info.album = JSON.stringify(this.resultImgs)
+						if(!this.isChoice){
+							this.info = res.data
+							this.symptomName = res.data.symptom_val
+							this.pName = res.data.province_val
+							this.cName = res.data.city_val
+							// this.info.album = JSON.stringify(this.resultImgs)
+						}else{
+							this.pName = res.data.province_val
+							this.cName = res.data.city_val
+							this.info.fullname = res.data.fullname
+							this.info.age = res.data.age
+							this.info.remarks = res.data.remarks
+							this.info.idnumber = res.data.idnumber
+							this.info.sex = res.data.sex
+							this.info.mobile = res.data.mobile
+							this.info.height = res.data.height
+							this.info.weight = res.data.weight
+							this.info.province = res.data.province
+							this.info.city = res.data.city
+							this.info.weight = res.data.weight
+							this.info.weight = res.data.weight
+							this.info.album = res.data.album
+						}
+						console.log(this.info.album)
 						this.resultImgs = this.info.album ? JSON.parse(this.info.album) : []
 					}else{
 						this.info = {}
@@ -355,6 +386,7 @@
 		onLoad(opt) {
 			// 这里接收项目ID和症状id
 			this.getCity()
+			console.log(123)
 			if(opt.id){
 				console.log(opt)
 				this.info.task_id = parseInt(opt.id)
