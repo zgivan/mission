@@ -41,10 +41,10 @@
 						name: '全部',
 						id: -1
 					},{
-						name: '缺资料',
+						name: '正在初筛',
 						id: 0
 					},{
-						name: '正在初筛',
+						name: '缺资料',
 						id: 1
 					},{
 						name: '初筛成功',
@@ -107,7 +107,7 @@
 					title: '加载中...',
 					mask: true
 				})
-				$H.post('/member/mypatient',{
+				$H.post('/patient/patient-list',{
 					page: page.num,
 					size: page.size,
 					time: this.yymm === '月份' ? '' : this.yymm,

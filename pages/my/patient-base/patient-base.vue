@@ -1,12 +1,12 @@
 <template>
 	<view>
 		<mescroll-body ref="mescrollRef" @init="mescrollInit" @down="downCallback" @up="upCallback">
-		<free-search-select  @search="search">
+		<free-search-select  @search="search" hasSelect :selectList="list" :currTab="currTab" @changeT="changeTab">
 		</free-search-select>
 		
 		<!-- 病患列表 -->
 		<view v-for="(item,index) in patients" :key="index">
-			<base-patient-item :item="item" @back="backPage" isChoice></base-patient-item>
+			<base-patient-item :item="item" @back="backPage"></base-patient-item>
 		</view>
 		</mescroll-body>
 	</view>
@@ -22,11 +22,36 @@
 		mixins: [MescrollMixin],
 		data() {
 			return {
+				list: [{
+					text: '全部',
+					status: -1,
+					num: 0
+				},{
+					text: '自由',
+					status: 0,
+					num: 0
+				},
+				{
+					text: '项目中',
+					status: 1,
+					num: 0
+				},
+				{
+					text: '黑名单',
+					status: 2,
+					num: 0
+				}],
+				currTab: 0,
 				patients:[],
 				keyword: '',
+				stype: -1   // -1全部 状态0 缺资料1 正在初筛2 初筛成功3 复审通过4 签署知情成功5 筛选失败
 			}
 		},
 		methods: {
+			changeTab(index){
+				this.currTab = index;
+				this.refreshLists()
+			},
 			search(val){
 				this.keyword = val
 				this.refreshLists()
@@ -39,6 +64,7 @@
 				this.getList(page)
 			},
 			getList(page){
+				console.log(this.stype)
 				// 获取我的患者列表
 				uni.showLoading({
 					title: '加载中...',
@@ -48,7 +74,7 @@
 					page: page.num,
 					size: page.size,
 					time: '',
-					status: 0,
+					status: this.list[this.currTab].status,
 					keyword: this.keyword
 				},{
 					header: {

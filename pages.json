@@ -90,8 +90,13 @@
 				"enablePullDownRefresh": false
 			}
 
-		},
-		{
+		},{
+			"path": "pages/my/patient-base/patient-base",
+			"style": {
+				"navigationBarTitleText": "患者库",
+				"enablePullDownRefresh": false
+			}
+		},{
 			"path": "pages/my/my-patient/my-patient",
 			"style": {
 				"navigationBarTitleText": "我的患者",

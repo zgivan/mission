@@ -3,8 +3,8 @@
 		<view class="example bg-white">
 			<!-- 基础表单校验 -->
 			<uni-forms ref="valiForm" :rules="rules" :modelValue="info">
-				<view class="p-2 flex align-center justify-end">
-					<view class="py-1 px-2 font-sm sec-bg-color text-white d-inline-block rounded" v-if="edit === 0" @click="toSelect">从我的患者中选择</view>
+				<view class="p-2 flex align-center justify-end" v-if="info.task_id > 0">
+					<view class="py-1 px-2 font-sm sec-bg-color text-white d-inline-block rounded" @click="toSelect">从患者库中选择</view>
 				</view>
 				<uni-forms-item label="姓名" required name="fullname">
 					<uni-easyinput :disabled="!canEdit" v-model="info.fullname" placeholder="请输入姓名" />
@@ -27,48 +27,51 @@
 				<uni-forms-item label="体重" name="weight">
 					<uni-easyinput type="number" v-model="info.weight" placeholder="请输入体重(kg)" />
 				</uni-forms-item>
-				<uni-forms-item label="确诊症状" name="symptom">
-					<uni-easyinput disabled v-model="symptomName" placeholder="请输入确诊症状" />
-				</uni-forms-item>
 				<uni-forms-item label="所在城市" required :name="!isBase?'city':''">
-					<view class="font-sm" style="float: right;height: 72rpx;line-height: 72rpx;" :style="cityName === '' || edit === 1 ? 'color:#ccc;':'color:#333;'" @click="openPopup">{{cityName == ''? '请选择所在地区': cityName}}</view>
+					<view style="font-size:26rpx;float: right;height: 72rpx;line-height: 72rpx;" :style="cityName === '' || edit === 1 ? 'color:#777;':'color:#333;'" @click="openPopup">{{cityName == ''? '请选择所在地区': cityName}}</view>
 					<!-- <uni-easyinput disabled v-model="cityName" placeholder="请选择所在地区"/> -->
 					<!-- <uni-data-picker placeholder="请选择所在地区" popup-title="请选择所在地区" :localdata="citys" v-model="info.city" @nodeclick="onnodeclick">
 					</uni-data-picker> -->
 				</uni-forms-item>
-				<uni-forms-item label="备注" name="remarks">
-					<uni-easyinput type="textarea" v-model="info.remarks" placeholder="请输入备注" />
-				</uni-forms-item>
-				<view class="flex px-3 py-2 align-center justify-between content-bg-color font-sm common-text-light">
-					<text>最多选择{{maxCount}}张图片</text>
-					<text>{{resultImgs.length}}/{{maxCount}}</text>
-				</view>
-				<view class="flex flex-wrap align-center pb-1 px-1 py-2" style="box-sizing: border-box;">
-					<block v-for="(item,index) in resultImgs" :key="index">
-						<view class="px-1 mb-2" style="width: 25%;" @longtap="delImg(index)">
-							<view class="img-bar flex align-center justify-center">
-								<image :src="item" mode="widthFix" class="img-bar-image"></image>
+				<template v-if="info.task_id > 0">
+					<uni-forms-item label="确诊症状" name="symptom">
+						<uni-easyinput disabled v-model="symptomName" placeholder="" />
+					</uni-forms-item>
+					<uni-forms-item label="备注" name="remarks">
+						<uni-easyinput type="textarea" v-model="info.remarks" placeholder="请输入备注" />
+					</uni-forms-item>
+					<view class="flex px-3 py-2 align-center justify-between content-bg-color font-sm common-text-light">
+						<text>最多选择{{maxCount}}张图片</text>
+						<text>{{resultImgs.length}}/{{maxCount}}</text>
+					</view>
+					<view class="flex flex-wrap align-center pb-1 px-1 py-2" style="box-sizing: border-box;">
+						<block v-for="(item,index) in resultImgs" :key="index">
+							<view class="px-1 mb-2" style="width: 25%;" @longtap="delImg(index)">
+								<view class="img-bar flex align-center justify-center">
+									<image :src="item" mode="widthFix" class="img-bar-image"></image>
+								</view>
 							</view>
-						</view>
-					</block>
-					<view class="px-1 mb-2" style="width: 25%;" @click="chooseImage" v-if="resultImgs.length < maxCount">
-						<view class="img-bar">
-							<view class="w-100 h-100 content-bg-color flex align-center justify-center flex-column position-absolute top-0 left-0">
-								<text class="iconfont icon-icon_zj common-text-light font-lg"></text>
-								<text class="font-sm common-min-mt common-text-light">添加照片</text>
+						</block>
+						<view class="px-1 mb-2" style="width: 25%;" @click="chooseImage" v-if="resultImgs.length < maxCount">
+							<view class="img-bar">
+								<view class="w-100 h-100 content-bg-color flex align-center justify-center flex-column position-absolute top-0 left-0">
+									<text class="iconfont icon-icon_zj common-text-light font-lg"></text>
+									<text class="font-sm common-min-mt common-text-light">添加照片</text>
+								</view>
 							</view>
 						</view>
 					</view>
-				</view>
+				</template>
 			</uni-forms>
 			<view class="p-3 flex align-center" @click="choice" v-if="otherEdit">
 				<choice-icon @click="choice" :selected="selected"></choice-icon> <text class="ml-2 font-sm text-danger">病例信息已获得患者知情同意</text>
 			</view>
-			<common-fixed-line :h="120"></common-fixed-line>
-			<view class="bg-white position-fixed fixed-bottom" style="height: 120rpx; z-index: 1;" v-if="otherEdit">
-				<view class="p-3">
-					<view class="main-bg-color text-white font flex align-center justify-center rounded-circle" style="height: 80rpx;" @click="submit('valiForm')">提交</view>
-				</view>
+		</view>
+		
+		<common-fixed-line :h="120"></common-fixed-line>
+		<view class="bg-white position-fixed fixed-bottom" style="height: 120rpx; z-index: 1;" v-if="otherEdit">
+			<view class="p-3">
+				<view class="main-bg-color text-white font flex align-center justify-center rounded-circle" style="height: 80rpx;" @click="submit('valiForm')">提交</view>
 			</view>
 		</view>
 		
@@ -169,7 +172,7 @@
 					imageCount: 50
 				},
 				info: {
-					id: 0,
+					id: 0,  // 患者库id
 					fullname: '',
 					age: '',
 					remarks: '',
@@ -182,7 +185,8 @@
 					province: 0,
 					city: 0,
 					album: '',
-					task_id: 0
+					task_id: 0,
+					patient_id:0   //项目患者id
 				},
 				symptomName: '有意愿参加任意临床项目',
 				pName: '请选择',
@@ -254,9 +258,6 @@
 				this.selected = !this.selected
 			},
 			submit(ref) {
-				this.info.album = JSON.stringify(this.resultImgs)
-				
-				console.log(this.info.album)
 				this.$refs[ref].validate().then(result => {
 					// 验证成功插入数据
 					if(!this.selected){
@@ -266,27 +267,11 @@
 						})
 						return
 					}
-					$H.post('/patient/add',this.info,{
-						header:{
-							Authorization: uni.getStorageSync('auth')
-						}
-					}).then(res => {
-						if(res.code === 1){
-							uni.showToast({
-								title:res.msg
-							})
-							setTimeout(() =>{
-								uni.navigateBack({
-									delta: -1
-								})
-							},500)
-						}else{
-							uni.showToast({
-								title:res.msg,
-								icon: 'none'
-							})
-						}
-					})
+					if(this.info.task_id > 0){
+						this.addProject()
+					}else{
+						this.addBase()
+					}
 				}).catch(err => {
 					console.log('err', err);
 					uni.showToast({
@@ -377,6 +362,55 @@
 						_this.resultImgs.splice(index,1)
 					}
 				})
+			},
+			addBase(){
+				// 添加到患者库
+				$H.post('/patient/add',this.info,{
+					header:{
+						Authorization: uni.getStorageSync('auth')
+					}
+				}).then(res => {
+					if(res.code === 1){
+						uni.showToast({
+							title:res.msg
+						})
+						setTimeout(() =>{
+							uni.navigateBack({
+								delta: -1
+							})
+						},500)
+					}else{
+						uni.showToast({
+							title:res.msg,
+							icon: 'none'
+						})
+					}
+				})
+			},
+			addProject(ref){
+				// 添加到项目
+				this.info.album = JSON.stringify(this.resultImgs)
+				$H.post('/patient/addtotask',this.info,{
+					header:{
+						Authorization: uni.getStorageSync('auth')
+					}
+				}).then(res => {
+					if(res.code === 1){
+						uni.showToast({
+							title:res.msg
+						})
+						setTimeout(() =>{
+							uni.navigateBack({
+								delta: -1
+							})
+						},500)
+					}else{
+						uni.showToast({
+							title:res.msg,
+							icon: 'none'
+						})
+					}
+				})
 			}
 		},
 		components: {
@@ -386,12 +420,14 @@
 		onLoad(opt) {
 			// 这里接收项目ID和症状id
 			this.getCity()
-			console.log(123)
 			if(opt.id){
-				console.log(opt)
 				this.info.task_id = parseInt(opt.id)
 				this.info.symptom = opt.sym
 				this.symptomName = opt.symName
+			}else{
+				uni.setNavigationBarTitle({
+					title: '添加患者库'
+				})
 			}
 			
 			if(opt.cid){
@@ -402,6 +438,7 @@
 			if(opt.stype == 1){
 				this.edit = 2
 			}
+			console.log(this.edit)
 		},
 		onShareAppMessage() {
 			return {
