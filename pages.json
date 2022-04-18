@@ -42,6 +42,13 @@
 				"enablePullDownRefresh": false
 			}
 
+		},{
+			"path": "pages/mission/add-patient-base/add-patient-base",
+			"style": {
+				"navigationBarTitleText": "添加库患者",
+				"enablePullDownRefresh": false
+			}
+
 		}, {
 			"path": "pages/mission/mission-detail/mission-detail",
 			"style": {

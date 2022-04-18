@@ -29,7 +29,7 @@
 					this.$emit('back',this.item.id)
 				}else{
 					uni.navigateTo({
-						url:'/pages/mission/add-patient/add-patient?cid='+this.item.id+'&stype='+this.stype
+						url:'/pages/mission/add-patient-base/add-patient-base?mpid='+this.item.id
 					})
 				}
 			}

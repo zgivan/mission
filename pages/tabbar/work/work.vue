@@ -123,7 +123,7 @@
 					title: '加载中...',
 					mask: true
 				})
-				$H.post('/member/mypatient',{
+				$H.post('/patient/patient-list',{
 					page: page.num,
 					size: page.size,
 					time: '',
