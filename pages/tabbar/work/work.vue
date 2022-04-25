@@ -5,7 +5,7 @@
 		<mescroll-body ref="mescrollRef" @init="mescrollInit" @down="downCallback" @up="upCallback">
 			<view class="mt-1" v-if="currTab < 2">
 				<block v-for="(item,index) in list" :key="index">
-					<free-list :type="type" :item="item" @detail="toDetail" @join="showJoin"></free-list>
+					<free-list :type="type" :item="item" @detail="toDetail" @join="showJoin(item.task_id,index)"></free-list>
 				</block>
 			</view>
 			
@@ -179,6 +179,58 @@
 							this.list = []
 							this.mescroll.endSuccess(0)
 						}
+					}
+				})
+			},
+			showJoin(id,index){
+				if(!uni.getStorageSync('auth')){
+					uni.showToast({
+						title: '授权登录后才能进行此操作',
+						icon: 'none'
+					})
+					setTimeout(()=>{
+						uni.switchTab({
+							url: '/pages/tabbar/my/my'
+						})
+					},800)
+					return
+				}
+				// 询问是否领取任务
+				uni.showModal({
+					title: '是否领取该任务？',
+					cancelText: '取消',
+					confirmText: '确定',
+					success: (res) => {
+						if(res.confirm){
+							//领取任务操作
+							this.joinMission(id,index)
+						}
+					}
+				})
+			},
+			joinMission(id,index){
+				//领取任务
+				uni.showLoading({
+					title: '提交中'
+				})
+				$H.post('/task/jointask',{
+					task_id: id
+				},{
+					header: {
+						Authorization: uni.getStorageSync('auth')
+					}
+				}).then(res => {
+					uni.hideLoading()
+					if(res.code === 1){
+						uni.showToast({
+							title: res.msg
+						})
+						this.list[index].is_join = 1
+					}else{
+						uni.showToast({
+							title: res.msg,
+							icon: 'none'
+						})
 					}
 				})
 			},

@@ -156,6 +156,7 @@
 						Authorization: uni.getStorageSync('auth'),
 					},
 				}).then(res => {
+					console.log(res)
 					uni.hideLoading()
 					if(res.code === 1){
 						this.mescroll.endSuccess(res.data.list.length)
@@ -199,7 +200,7 @@
 		onShareAppMessage() {
 			return {
 				title: '邀请你加入百科迈招募',
-				path: '/pages/tabBar/index/index?pid='+uni.getStorageSync('uid')
+				path: '/pages/tabbar/index/index?pid='+uni.getStorageSync('uid')
 			}
 		}
 	}

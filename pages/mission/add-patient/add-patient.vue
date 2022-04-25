@@ -186,6 +186,7 @@
 					city: 0,
 					album: '',
 					task_id: 0,
+					birthday:'',
 					patient_id:0   //项目患者id
 				},
 				symptomName: '有意愿参加任意临床项目',
@@ -368,6 +369,7 @@
 			},
 			addProject(ref){
 				// 添加到项目
+				this.info.birthday = $T.getBirthdayFromIdCard(this.info.idnumber)		
 				uni.showLoading({
 					title: '提交中...',
 					mask: true
@@ -457,7 +459,7 @@
 		onShareAppMessage() {
 			return {
 				title: '邀请你加入百科迈招募',
-				path: '/pages/tabBar/index/index?pid='+uni.getStorageSync('uid')
+				path: '/pages/tabbar/index/index?pid='+uni.getStorageSync('uid')
 			}
 		}
 	}

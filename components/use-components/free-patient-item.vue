@@ -1,5 +1,5 @@
 <template>
-	<view class="p-3 position-relative mt-1 bg-white" @click="toDetail">
+	<view class="p-3 position-relative mt-1 bg-white" @click="toDetail(item.id||item.key)">
 		<view class="font font-weight-bold"><text>{{item.fullname}}</text><text class="ml-1">{{item.sex === 0 ? '男' : '女'}}</text><text class="ml-1">{{item.age}}</text></view>
 		<view class="mt-2 font-sm">匹配项目：{{item.task_name}}</view>
 		<view class="mt-2 font-sm">报名时间：{{item.create_time_val}}</view>
@@ -25,12 +25,12 @@
 			}
 		},
 		methods: {
-			toDetail(){
+			toDetail(id){
 				if(this.isChoice){
-					this.$emit('back',this.item.id)
+					this.$emit('back',id)
 				}else{
 					uni.navigateTo({
-						url:'/pages/mission/add-patient/add-patient?cid='+this.item.key+'&stype='+this.stype
+						url:'/pages/mission/add-patient/add-patient?cid='+id+'&stype='+this.stype
 					})
 				}
 			}

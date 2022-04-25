@@ -325,7 +325,7 @@
 		onShareAppMessage() {
 			return {
 				title: '邀请你加入百科迈招募',
-				path: '/pages/tabBar/index/index?pid='+uni.getStorageSync('uid')
+				path: '/pages/tabbar/index/index?pid='+uni.getStorageSync('uid')
 			}
 		}
 	}

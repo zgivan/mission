@@ -145,6 +145,7 @@
 					weight: '',
 					province: 0,
 					city: 0,
+					birthday: ''
 				},
 				pName: '请选择',
 				cName: '请选择'
@@ -208,10 +209,10 @@
 					}
 				}).catch(err => {
 					console.log('err', err);
-					uni.showToast({
-						title: err[0].errorMessage,
-						icon: 'none'
-					});
+					// uni.showToast({
+					// 	title: err[0].errorMessage,
+					// 	icon: 'none'
+					// });
 				})
 			},
 			onnodeclick(e) {
@@ -266,7 +267,7 @@
 			},
 			addBase(){
 				// 添加到患者库
-				console.log(this.info)
+				this.info.birthday = $T.getBirthdayFromIdCard(this.info.idnumber)			
 				uni.showLoading({
 					title: '提交中...',
 					mask: true
@@ -311,7 +312,7 @@
 		onShareAppMessage() {
 			return {
 				title: '邀请你加入百科迈招募',
-				path: '/pages/tabBar/index/index?pid='+uni.getStorageSync('uid')
+				path: '/pages/tabbar/index/index?pid='+uni.getStorageSync('uid')
 			}
 		}
 	}
