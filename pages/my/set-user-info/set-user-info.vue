@@ -21,15 +21,15 @@
 					<view @click="toSelect('city')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end">{{scityName == '' ? '请选择服务城市':scityName}}</view>
 				</view>
 				<view class="border-bottom border-light-secondary flex align-center justify-between py-1" style="min-height: 96rpx;box-sizing: border-box;">
-					<text class="font-sm common-text-light common-pr" style="width: 152rpx;">感兴趣疾病类型<text class="red-star">*</text></text>
+					<text class="font-sm common-text-light common-pr" style="width: 152rpx;">感兴趣疾病类型</text>
 					<view @click="toSelect('symptom')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end">{{diseaseName == '' ? '请选择感兴趣疾病类型':diseaseName}}</view>
 				</view>
 				<view class="border-bottom border-light-secondary flex align-center justify-between py-1" style="min-height: 96rpx;box-sizing: border-box;">
-					<text class="font-sm common-text-light common-pr" style="width: 152rpx;">服务科室<text class="red-star">*</text></text>
+					<text class="font-sm common-text-light common-pr" style="width: 152rpx;">服务科室</text>
 					<view @click="toSelect('depart')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end">{{departName == '' ? '请选择服务科室':departName}}</view>
 				</view>
 				<view class="border-bottom border-light-secondary flex align-center justify-between py-1" style="min-height: 96rpx;box-sizing: border-box;">
-					<text class="font-sm common-text-light common-pr" style="width: 152rpx;">工作医院<text class="red-star">*</text></text>
+					<text class="font-sm common-text-light common-pr" style="width: 152rpx;">工作医院</text>
 					<view @click="toSelect('hospital')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end">{{hospitalName == '' ? '请选择工作医院':hospitalName}}</view>
 				</view>
 			</view>
@@ -173,15 +173,15 @@
 				if(this.info.service_city === ''){
 					return '请选择服务城市'
 				}
-				if(this.info.disease === ''){
-					return '请选择疾病类型'
-				}
-				if(this.info.department === ''){
-					return '请选择服务科室'
-				}
-				if(this.info.hospital === ''){
-					return '请选择工作医院'
-				}
+				// if(this.info.disease === ''){
+				// 	return '请选择疾病类型'
+				// }
+				// if(this.info.department === ''){
+				// 	return '请选择服务科室'
+				// }
+				// if(this.info.hospital === ''){
+				// 	return '请选择工作医院'
+				// }
 				return ''
 			},
 			save(){
