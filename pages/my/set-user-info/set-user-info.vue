@@ -33,7 +33,7 @@
 					<view @click="toSelect('hospital')" class="flex-1 font-sm flex align-center ml-2 text-muted justify-end">{{hospitalName == '' ? '请选择工作医院':hospitalName}}</view>
 				</view>
 			</view>
-			<view class="sec-text-color mt-4 px-3 font-sm"><text class="main-text-color">*</text>为必填项，完善个人信息才能领取任务</view>
+			<view class="sec-text-color mt-4 px-3 font-sm">*为必填项，完善个人信息才能领取任务</view>
 			<view class="p-3">
 				<view class="w-100 flex align-center justify-center main-bg-color text-white button-circle" @click="save">保存</view>
 			</view>
@@ -223,7 +223,7 @@
 			},
 			changeCompany(){
 				uni.showLoading({
-					title: '保存中...',
+					title: '变更中...',
 					mask: true
 				})
 				$H.post('/member/edit-company',{
@@ -240,6 +240,7 @@
 						})
 						setTimeout(() => {
 							this.getUser()
+							this.showEdit = false
 						},800)
 					}else{
 						uni.showToast({

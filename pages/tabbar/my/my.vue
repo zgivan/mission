@@ -161,6 +161,7 @@
 						Authorization: uni.getStorageSync('auth'),
 					},
 				}).then(result => {
+					console.log('user',result)
 					if(result.code === 1){
 						this.login(result.data)
 						this.checkPhone()
