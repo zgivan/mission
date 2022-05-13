@@ -22,6 +22,7 @@ export default {
 			state.userid = userinfo.id
 			state.loginStatus = true
 			uni.setStorageSync('uid',userinfo.id)
+			uni.setStorageSync('field',userinfo.field)
 			uni.setStorageSync('userinfo',JSON.stringify(userinfo))
 		},
 		// 退出
@@ -32,6 +33,7 @@ export default {
 			uni.removeStorageSync('userinfo')
 			uni.removeStorageSync('auth')
 			uni.removeStorageSync('uid')
+			uni.removeStorageSync('field')
 		}
 	},
 	actions:{

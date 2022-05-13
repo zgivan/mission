@@ -72,11 +72,11 @@
 					page: page.num
 				}).then(res => {
 					uni.hideLoading()
-					console.log(res)
+					// console.log(res)
 					if(res.code === 1){
 						let list = res.data
 						list.map(v=>{
-							console.log('check:'+this.cids.indexOf(v.id))
+							// console.log('check:'+this.cids.indexOf(v.id))
 							if(this.cids.indexOf(parseInt(v.id)) > -1){
 								v.checked = true
 							}else{
@@ -126,9 +126,6 @@
 				this.$eventHub.$emit('setIds',data);
 				uni.navigateBack({})
 			},
-			change(e) {
-				console.log(e);
-			},
 			search(val){
 				this.keyword = val;
 				this.refreshLists()
@@ -144,7 +141,7 @@
 				// 获取城市信息
 				$H.post('/com/get_region').then(res => {
 					if(res.code === 1){
-						console.log(res)
+						// console.log(res)
 						this.citys = res.data.list
 					}else{
 						uni.showToast({
@@ -162,7 +159,7 @@
 				this.getHosp(page)
 			},
 			delSelect(index){
-				console.log(index)
+				// console.log(index)
 				
 				this.list.map(v=>{
 					if(v.id == this.cids[index]){
@@ -183,8 +180,8 @@
 			this.cnames = option.names === '' ? [] : option.names.split(',')
 			
 			this.cids = this.cids.map(v => {return parseInt(v)})
-			console.log(this.cids)
-			console.log(this.cnames)
+			// console.log(this.cids)
+			// console.log(this.cnames)
 			
 			uni.setNavigationBarTitle({
 				title: '选择工作医院'

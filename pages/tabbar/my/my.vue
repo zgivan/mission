@@ -70,7 +70,7 @@
 			}
 			this.initUser()
 			this.checkPhone()
-			console.log(this.userinfo)
+			// console.log(uni.getStorageSync('field'))
 		},
 		methods: {
 			...mapMutations(['login','initUser']),
@@ -87,7 +87,7 @@
 				}
 			},
 			getPhoneNumber(e){
-				console.log(e)
+				// console.log(e)
 				if(e.detail.errMsg == 'getPhoneNumber:ok'){
 					let info = {
 						encryptedData: e.detail.encryptedData,
@@ -95,13 +95,13 @@
 						sessionKey: uni.getStorageSync('session_key'),
 						openid: uni.getStorageSync('openid')
 					}
-					console.log(info)
+					// console.log(info)
 					$H.post('/user/get-phone',info,{
 						header:{
 							Authorization: uni.getStorageSync('auth'),
 						}
 					}).then(res => {
-						console.log(res)
+						// console.log(res)
 						if(res.code === 1){
 							this.getUser()
 							this.$refs['toast'].close()
@@ -120,7 +120,7 @@
 				uni.getUserProfile({
 					desc:'登录',
 					success:(res)=>{
-						console.log(res)
+						// console.log(res)
 						this.getCode(res.encryptedData,res.iv)
 					}
 				})
@@ -130,7 +130,7 @@
 				$H.post('/user/code',{
 					code: this.code
 				}).then(result => {
-					console.log(result);
+					// console.log(result);
 					uni.setStorageSync('openid',result.data.openid)
 					uni.setStorageSync('session_key',result.data.session_key)
 					$H.post('/user/wxlogin',{
@@ -140,7 +140,7 @@
 						sessionKey: result.data.session_key,
 						pid: uni.getStorageSync('pid')
 					}).then(ret => {
-						console.log(ret)
+						// console.log(ret)
 						if(ret.code === 1){
 							let auth = ret.data.token_type+' '+ret.data.access_token
 							uni.setStorageSync('auth',auth)
@@ -161,7 +161,7 @@
 						Authorization: uni.getStorageSync('auth'),
 					},
 				}).then(result => {
-					console.log('user',result)
+					// console.log('user',result)
 					if(result.code === 1){
 						this.login(result.data)
 						this.checkPhone()

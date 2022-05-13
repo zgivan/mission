@@ -54,7 +54,7 @@
 						}
 					},
 					fail: (err) => {
-						console.log('downloadFile fail, err is:', err)
+						// console.log('downloadFile fail, err is:', err)
 					}
 				})
 			},

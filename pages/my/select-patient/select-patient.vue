@@ -56,7 +56,7 @@
 					}
 				}).then(res=>{
 					uni.hideLoading()
-					console.log(res)
+					// console.log(res)
 					if(res.code === 1){
 						this.mescroll.endSuccess(res.data.list.length)
 						if(page.num === 1){

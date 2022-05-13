@@ -135,6 +135,22 @@
 					},800)
 					return
 				} 
+				if(!uni.getStorageSync('field')){
+					uni.showModal({
+						title: '提示',
+						content: '请先完善个人信息再继续添加患者',
+						confirmText: '去完善',
+						cancelText: '取消',
+						success: (res) => {
+							if(res.confirm){
+								uni.navigateTo({
+									url: '/pages/my/set-user-info/set-user-info'
+								})
+							}
+						}
+					})
+					return
+				}
 				uni.navigateTo({
 					url: '/pages/mission/add-patient-base/add-patient-base'
 				})
@@ -150,6 +166,22 @@
 							url: '/pages/tabbar/my/my'
 						})
 					},800)
+					return
+				}
+				if(!uni.getStorageSync('field')){
+					uni.showModal({
+						title: '提示',
+						content: '请先完善个人信息再继续领取任务',
+						confirmText: '去完善',
+						cancelText: '取消',
+						success: (res) => {
+							if(res.confirm){
+								uni.navigateTo({
+									url: '/pages/my/set-user-info/set-user-info'
+								})
+							}
+						}
+					})
 					return
 				}
 				// 询问是否领取任务
@@ -296,7 +328,7 @@
 						Authorization: uni.getStorageSync('auth')
 					}
 				}).then(res => {
-					console.log(res)
+					// console.log(res)
 					uni.hideLoading()
 					if(res.code === 1){
 						this.mescroll.endSuccess(res.data.list.length);  
@@ -365,7 +397,7 @@
 		margin-top: 10rpx;
 	}
 	.swiper-box {
-		height: 200px;
+		height: 400rpx;
 	}
 
 	.swiper-item {

@@ -81,6 +81,22 @@
 						})
 					},800)
 					return
+				} 
+				if(!uni.getStorageSync('field')){
+					uni.showModal({
+						title: '提示',
+						content: '请先完善个人信息再继续领取任务',
+						confirmText: '去完善',
+						cancelText: '取消',
+						success: (res) => {
+							if(res.confirm){
+								uni.navigateTo({
+									url: '/pages/my/set-user-info/set-user-info'
+								})
+							}
+						}
+					})
+					return
 				}
 				// 领取任务
 				$H.post('/task/jointask',{
@@ -116,7 +132,7 @@
 						})
 					},800)
 					return
-				}
+				} 
 				uni.showLoading({
 					title:'操作中...',
 					mask: true

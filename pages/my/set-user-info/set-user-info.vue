@@ -54,6 +54,7 @@
 
 <script>
 	import $H from '@/common/lib/request.js'
+	import { mapMutations } from 'vuex'
 	export default {
 		data() {
 			return {
@@ -80,15 +81,7 @@
 			}
 		},
 		methods: {
-			onnodeclick(e) {
-				console.log(e);
-			},
-			onpopupopened(e) {
-				console.log('popupopened');
-			},
-			onpopupclosed(e) {
-				console.log('popupclosed');
-			},
+			...mapMutations(['login']),
 			toSelect(type){
 				this.type = type
 				this.tempids = ''
@@ -141,7 +134,7 @@
 						Authorization: uni.getStorageSync('auth')
 					}
 				}).then(res => {
-					console.log(res)
+					// console.log(res)
 					uni.hideLoading()
 					if(res.code === 0){
 						let info = res.data
@@ -208,11 +201,7 @@
 						uni.showToast({
 							title: res.msg
 						})
-						setTimeout(() => {
-							uni.navigateBack({
-								delta:-1
-							})
-						},800)
+						this.setUser()
 					}else{
 						uni.showToast({
 							title: res.msg,
@@ -221,6 +210,28 @@
 					}
 				})
 			},
+			setUser(){
+				// 获取用户信息
+				$H.post('/token/user',{},{
+					header:{
+						Authorization: uni.getStorageSync('auth'),
+					},
+				}).then(result => {
+					if(result.code === 1){
+						this.login(result.data)
+						setTimeout(() => {
+							uni.navigateBack({
+								delta:-1
+							})
+						},400)
+					}else{
+						uni.showToast({
+							msg: result.msg,
+							icon: 'none'
+						})
+					}
+				})
+			},			
 			changeCompany(){
 				uni.showLoading({
 					title: '变更中...',

@@ -64,7 +64,7 @@
 				this.getList(page)
 			},
 			getList(page){
-				console.log(this.stype)
+				// console.log(this.stype)
 				// 获取我的患者列表
 				uni.showLoading({
 					title: '加载中...',
@@ -82,7 +82,7 @@
 					}
 				}).then(res=>{
 					uni.hideLoading()
-					console.log(res)
+					// console.log(res)
 					if(res.code === 1){
 						this.mescroll.endSuccess(res.data.list.length)
 						if(page.num === 1){

@@ -36,7 +36,7 @@
 			getDepart(){
 				// 获取科室列表
 				$H.post('/com/department').then(res => {
-					console.log(res)
+					// console.log(res)
 					if(res.code === 1){
 						let ret = res.data.list
 						this.$nextTick(function(){
@@ -47,7 +47,7 @@
 									v.checked = false
 								}
 							})
-							console.log(ret)
+							// console.log(ret)
 							this.list = ret
 							this.$forceUpdate()
 						})
@@ -62,7 +62,7 @@
 			getSym(){
 				// 获取疾病类型
 				$H.post('/com/get_disease').then(res => {
-					console.log(res)
+					// console.log(res)
 					if(res.code === 1){
 						let ret = res.data.list
 						this.$nextTick(function(){
@@ -73,7 +73,7 @@
 									v.checked = false
 								}
 							})
-							console.log(ret)
+							// console.log(ret)
 							this.list = ret
 							this.$forceUpdate()
 						})
@@ -126,8 +126,8 @@
 			this.cnames = option.names === '' ? [] : option.names.split(',')
 			
 			this.cids = this.cids.map(v => {return parseInt(v)})
-			console.log(this.cids)
-			console.log(this.cnames)
+			// console.log(this.cids)
+			// console.log(this.cnames)
 			if(this.type === 'depart'){
 				this.getDepart()
 				uni.setNavigationBarTitle({

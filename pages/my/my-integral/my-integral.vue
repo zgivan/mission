@@ -68,14 +68,14 @@
 						Authorization: uni.getStorageSync('auth')
 					}
 				}).then(res => {
-					console.log(res)
+					// console.log(res)
 					if(res.code === 0){
 						this.myinfo = res.data
 					}
 				})
 			},
 			upCallback(page){
-				console.log(uni.getStorageSync('auth'))
+				// console.log(uni.getStorageSync('auth'))
 				this.getMyIntegral()
 				this.getList(page)
 			},
@@ -88,7 +88,7 @@
 						Authorization: uni.getStorageSync('auth')
 					}
 				}).then(res => {
-					console.log(res)
+					// console.log(res)
 					if(res.code === 1){
 						this.mescroll.endSuccess(res.data.list.length)
 						if(page.num === 1){

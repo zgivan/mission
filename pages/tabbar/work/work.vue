@@ -165,7 +165,7 @@
 						Authorization: uni.getStorageSync('auth'),
 					},
 				}).then(res => {
-					console.log(res)
+					// console.log(res)
 					uni.hideLoading()
 					if(res.code === 1){
 						this.mescroll.endSuccess(res.data.list.length)
@@ -248,7 +248,7 @@
 						Authorization: uni.getStorageSync('auth'),
 					},
 				}).then(res => {
-					console.log(res)
+					// console.log(res)
 					uni.hideLoading()
 					if(res.code === 1){
 						this.mescroll.endSuccess(res.data.list.length)
@@ -305,7 +305,7 @@
 			freePatientItem
 		},
 		onShow() {
-			console.log(uni.getStorageSync('auth'))
+			// console.log(uni.getStorageSync('auth'))
 			this.getTabs()
 			this.refreshLists()
 		},
