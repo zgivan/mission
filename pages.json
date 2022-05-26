@@ -17,7 +17,7 @@
 		{
 			"path": "pages/tabbar/news/news",
 			"style": {
-				"navigationBarTitleText": "资讯",
+				"navigationBarTitleText": "科普",
 				"enablePullDownRefresh": false
 			}
 
@@ -42,7 +42,7 @@
 				"enablePullDownRefresh": false
 			}
 
-		},{
+		}, {
 			"path": "pages/mission/add-patient-base/add-patient-base",
 			"style": {
 				"navigationBarTitleText": "添加库患者",
@@ -90,20 +90,20 @@
 				"enablePullDownRefresh": false
 			}
 
-		},{
+		}, {
 			"path": "pages/my/my-collected/my-collected",
 			"style": {
 				"navigationBarTitleText": "我的收藏",
 				"enablePullDownRefresh": false
 			}
 
-		},{
+		}, {
 			"path": "pages/my/patient-base/patient-base",
 			"style": {
 				"navigationBarTitleText": "患者库",
 				"enablePullDownRefresh": false
 			}
-		},{
+		}, {
 			"path": "pages/my/my-patient/my-patient",
 			"style": {
 				"navigationBarTitleText": "我的患者",
@@ -137,10 +137,18 @@
 				"enablePullDownRefresh": false
 			}
 
-		},{
+		}, {
 			"path": "pages/news/news-detail/news-detail",
 			"style": {
 				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		} 
+		,{
+			"path": "pages/my/service-privacy/service-privacy",
+			"style": {
+				"navigationBarTitleText": "服务协议与隐私政策",
 				"enablePullDownRefresh": false
 			}
 
@@ -172,7 +180,7 @@
 			{
 				"iconPath": "static/tabbar/news.png",
 				"selectedIconPath": "static/tabbar/news_on.png",
-				"text": "资讯",
+				"text": "科普",
 				"pagePath": "pages/tabbar/news/news"
 			},
 			{

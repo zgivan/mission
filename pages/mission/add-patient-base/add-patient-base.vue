@@ -28,9 +28,10 @@
 					<view style="font-size:26rpx;float: right;height: 72rpx;line-height: 72rpx;" :style="cityName === '' || edit === 1 ? 'color:#777;':'color:#333;'" @click="openPopup">{{cityName == ''? '请选择所在地区': cityName}}</view>
 				</uni-forms-item>
 			</uni-forms>
-			<view class="p-3 flex align-center" @click="choice">
-				<choice-icon @click="choice" :selected="selected"></choice-icon> <text class="ml-2 font-sm text-danger">病例信息已获得患者知情同意</text>
+			<view class="px-3 pt-3 flex align-center" @click="choice">
+				<choice-icon @click="choice" :selected="selected"></choice-icon> <text class="ml-2 font-sm common-text-muted">病例信息已获得患者知情且同意</text>
 			</view>
+			<view class="font-sm pb-3 mt-1" style="padding-left: 70rpx;"><text style="color: #1890ff;" @click.stop="toRead">《用户服务协议与隐私政策》</text></view>		
 		</view>
 		
 		<common-fixed-line :h="120"></common-fixed-line>
@@ -295,6 +296,11 @@
 					}
 				})
 			},
+			toRead(){
+				uni.navigateTo({
+					url: '/pages/my/service-privacy/service-privacy'
+				})
+			}
 		},
 		components: {
 			choiceIcon,

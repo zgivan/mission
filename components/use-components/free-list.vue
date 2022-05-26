@@ -2,14 +2,14 @@
 	<view class="py-2 px-3 mb-1 bg-white" @click="toDetail">
 		<view style="line-height: 2;"><text class="d-inline-block px-2 rounded bg-warning text-white font-small mr-2" v-if="type === 0 && item.is_top === 1">置顶</text><text class="font font-weight-bold">{{item.name}}</text></view>
 		<view :class="type === 2?'border-bottom border-top border-light-secondary mt-1 py-3':''">
-			<view class="font-sm mt-1" v-if="type === 2 || type === 3"><text class="text-light-muted">登记编号：</text>{{item.code}}</view>
+			<view class="font-sm mt-1" v-if="type === 2 || type === 3"><text class="text-light-muted">登记编号：</text>{{item.cde_code}}</view>
 			<view class="font-sm mt-1" v-if="type === 2 || type === 3"><text class="text-light-muted">实验分期：</text>{{item.stage}}</view>
 			<view class="font-sm mt-1" v-if="type !== 3"><text class="text-light-muted">药物名称：</text>{{item.drug_name}}</view>
 			<view class="font-sm mt-1"><text class="text-light-muted">药物类型：</text>{{item.medicine_name}}</view>
 			<view class="font-sm mt-1"><text class="text-light-muted">申办机构：</text>{{item.institution}}</view>
 			<view class="font-sm mt-1"><text class="text-light-muted">适应症：</text>{{item.symptom_name}}</view>
 			<view class="font-sm mt-1" v-if="type !== 3"><text class="text-light-muted">招募人数：</text>{{item.recruit_number}}</view>		
-			<view class="font-sm mt-1" v-if="type !== 0 && type !== 3"><text class="text-light-muted">截止日期：</text>{{item.end_time}}</view>
+			<view class="font-sm mt-1" v-if="type !== 0 && type !== 3"><text class="text-light-muted">截止日期：</text>{{endTime}}</view>
 			<view class="font-sm mt-1" v-if="type === 4"><text class="text-light-muted">招募时间：</text>内容一详情</view>
 			<view class="flex justify-between mt-1" :class="type===1?'mt-4':''">
 				<view class="font-sm font-weight-bold" v-if="type!==3">
@@ -95,6 +95,7 @@
 
 <script>
 	import htmlParser from '@/common/lib/richText.js'
+	import $T from '@/common/lib/tool.js'
 	export default {
 		props:{
 			item: {
@@ -166,6 +167,9 @@
 				}else{
 					return []
 				}
+			},
+			endTime(){
+				return $T.exchageTime(this.item.end_time,3)
 			}
 		}
 	}

@@ -34,6 +34,9 @@
 				</view>
 			</view>
 			<view class="sec-text-color mt-4 px-3 font-sm">*为必填项，完善个人信息才能领取任务</view>
+			<view class="px-3 pt-3 flex align-center">
+				<choice-icon @click="choice" :selected="selected"></choice-icon> <text class="ml-2 font-sm common-text-muted">阅读并同意<text style="color: #1890ff;" @click.stop="toRead">《用户服务协议与隐私政策》</text></text>
+			</view>
 			<view class="p-3">
 				<view class="w-100 flex align-center justify-center main-bg-color text-white button-circle" @click="save">保存</view>
 			</view>
@@ -54,6 +57,7 @@
 
 <script>
 	import $H from '@/common/lib/request.js'
+	import choiceIcon from '@/components/use-components/choice-icon.vue'
 	import { mapMutations } from 'vuex'
 	export default {
 		data() {
@@ -77,8 +81,12 @@
 				company:'',
 				is_edit: 1,
 				code: '',
-				showEdit: false
+				showEdit: false,
+				selected: true
 			}
+		},
+		components: {
+			choiceIcon
 		},
 		methods: {
 			...mapMutations(['login']),
@@ -165,6 +173,9 @@
 				}
 				if(this.info.service_city === ''){
 					return '请选择服务城市'
+				}
+				if(!this.selected){
+					return '请阅读并同意用户服务协议与隐私政策'
 				}
 				// if(this.info.disease === ''){
 				// 	return '请选择疾病类型'
@@ -260,7 +271,10 @@
 						})
 					}
 				})
-			}
+			},
+			choice(){
+				this.selected = !this.selected
+			},
 		},
 		onShow() {
 			if(this.type === 'hospital'){
