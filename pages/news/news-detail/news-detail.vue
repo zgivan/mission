@@ -6,7 +6,16 @@
 			<view class="common-text-light font-small mt-1">阅读量：{{info.view}}</view>
 		</view>
 		<view class="p-3 richtext">
-			<rich-text :nodes="htmlNodes"></rich-text>
+			<view v-if="info.video !== ''">
+				<video 
+					class="w-100"
+					id="myVideo" 
+					:src="info.video"
+					@error="videoErrorCallback"
+					controls
+				></video>
+			</view>
+			<rich-text :nodes="htmlNodes" class="mt-2"></rich-text>
 		</view>
 	</view>
 </template>
@@ -43,6 +52,12 @@
 							title: res.msg
 						})
 					}
+				})
+			},
+			videoErrorCallback: function(e) {
+				uni.showModal({
+					content: e.target.errMsg,
+					showCancel: false
 				})
 			}
 		},

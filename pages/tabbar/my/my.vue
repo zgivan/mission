@@ -70,7 +70,7 @@
 			}
 			this.initUser()
 			this.checkPhone()
-			// console.log(uni.getStorageSync('field'))
+			console.log(uni.getStorageSync('auth'))
 		},
 		methods: {
 			...mapMutations(['login','initUser']),

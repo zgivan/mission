@@ -35,13 +35,12 @@
 			</view>
 			<view class="sec-text-color mt-4 px-3 font-sm">*为必填项，完善个人信息才能领取任务</view>
 			<view class="px-3 pt-3 flex align-center">
-				<choice-icon @click="choice" :selected="selected"></choice-icon> <text class="ml-2 font-sm common-text-muted">阅读并同意<text style="color: #1890ff;" @click.stop="toRead">《用户服务协议与隐私政策》</text></text>
+				<choice-icon @click="choice" :selected="selected"></choice-icon> <view class="ml-2 font-sm common-text-muted flex align-center">阅读并同意<navigator style="color: #1890ff;" url="/pages/my/service-privacy/service-privacy">《用户服务协议与隐私政策》</navigator></view>
 			</view>
 			<view class="p-3">
 				<view class="w-100 flex align-center justify-center main-bg-color text-white button-circle" @click="save">保存</view>
 			</view>
 		</view>
-		
 		<view class="position-fixed w-100 h-100 top-0 left-0" style="background-color: rgba(0,0,0,0.5);" v-if="showEdit">
 			<view class="position-absolute flex flex-column align-center justify-center bg-white rounded" style="width: 560rpx;height: 360rpx;top: 50%;left: 50%;margin-top: -180rpx;margin-left: -280rpx;">
 				<view class="flex justify-around position-relative w-100"><view class="font-md common-text-dark">公司变更</view><text @click="showEdit=!showEdit" class="iconfont icon-guanbi position-absolute font common-text-light" style="top: 0rpx;right: 20rpx;"></text></view>

@@ -43,9 +43,11 @@ export default {
 						}
 						if(ret.statusCode === 200){
 							let res = JSON.parse(ret.data)
+							console.log(res)
 							if(res.code === 1){
 								_this.imgCount++ 
 								_this.resultImgs.push(res.data) 
+								console.log(_this.resultImgs)
 							}else{
 								uni.showToast({
 									title: res.msg,
